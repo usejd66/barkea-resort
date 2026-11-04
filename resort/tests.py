@@ -15,6 +15,13 @@ class PublicPagesTests(TestCase):
         response = self.client.get('/villas/999/')
         self.assertEqual(response.status_code, 404)
 
+    def test_villa_pages_do_not_render_missing_floor_plan_urls(self):
+        for villa_id in (1, 2, 3, 4):
+            with self.subTest(villa_id=villa_id):
+                response = self.client.get(f'/villas/{villa_id}/')
+                self.assertEqual(response.status_code, 200)
+                self.assertNotContains(response, 'src="/static/"')
+
 
 class ContactMessageTests(TestCase):
     def test_valid_contact_submission_is_saved(self):

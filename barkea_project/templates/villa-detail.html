@@ -79,12 +79,12 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active px-4 fw-semibold" id="ground-tab" data-bs-toggle="pill" data-bs-target="#ground-pane" type="button" role="tab" aria-controls="ground-pane" aria-selected="true">Ground Floor</button>
                 </li>
-                {% if villa.floors >= 2 %}
+                {% if villa.floors >= 2 and villa.plan_first %}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link px-4 fw-semibold" id="first-tab" data-bs-toggle="pill" data-bs-target="#first-pane" type="button" role="tab" aria-controls="first-pane" aria-selected="false">First Floor</button>
                 </li>
                 {% endif %}
-                {% if villa.floors >= 3 %}
+                {% if villa.floors >= 3 and villa.plan_second %}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link px-4 fw-semibold" id="second-tab" data-bs-toggle="pill" data-bs-target="#second-pane" type="button" role="tab" aria-controls="second-pane" aria-selected="false">Second Floor</button>
                 </li>
@@ -100,7 +100,7 @@
                         <span class="fw-semibold text-secondary">Ground Floor Plan</span>
                     </div>
                 </div>
-                {% if villa.floors >= 2 %}
+                {% if villa.floors >= 2 and villa.plan_first %}
                 <div class="tab-pane fade" id="first-pane" role="tabpanel" aria-labelledby="first-tab" tabindex="0">
                     <div class="card border-0 bg-light p-3 rounded-4 text-center">
                         <div class="bg-white rounded-3 p-3 shadow-sm mb-3">
@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 {% endif %}
-                {% if villa.floors >= 3 %}
+                {% if villa.floors >= 3 and villa.plan_second %}
                 <div class="tab-pane fade" id="second-pane" role="tabpanel" aria-labelledby="second-tab" tabindex="0">
                     <div class="card border-0 bg-light p-3 rounded-4 text-center">
                         <div class="bg-white rounded-3 p-3 shadow-sm mb-3">
