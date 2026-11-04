@@ -1,0 +1,151 @@
+:root {
+    --barkea-navy: #0f172a;   /* Blu e natës shumë e thellë (Zëvendëson jeshilen e errët) */
+    --barkea-blue: #1e40af;   /* Blu mbretërore elektrike dhe e gjallë */
+    --barkea-soft: #f8fafc;   /* E bardhë e pastër akulli */
+    --barkea-gold: #d97706;   /* Ngjyrë Kamel/Amber e ngrohtë për butonat */
+
+    /* Përditësimi për Bootstrap */
+    --bs-primary: #1e40af;
+    --bs-primary-rgb: 30, 64, 175;
+    --bs-dark-rgb: 15, 23, 42;      
+    --bs-light-rgb: 248, 250, 252;  
+}
+
+
+.text-primary {
+    color: var(--barkea-gold) !important;
+}
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    color: #263544;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.01em;
+}
+
+/* Buttons */
+.btn-primary {
+    --bs-btn-bg: var(--barkea-blue);
+    --bs-btn-border-color: var(--barkea-blue);
+    --bs-btn-hover-bg: var(--barkea-navy);
+    --bs-btn-hover-border-color: var(--barkea-navy);
+}
+
+.btn {
+    transition: 0.25s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Navbar */
+header.sticky-top {
+    z-index: 1030;
+}
+
+.navbar {
+    min-height: 72px;
+}
+
+.navbar-brand {
+    letter-spacing: 0.04em;
+}
+
+.navbar .nav-link {
+    font-weight: 500;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: #fff;
+}
+
+/* Hero */
+main > section:first-child:has(> img) {
+    min-height: 42vh;
+}
+
+main > section:first-child h1 {
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* Cards */
+.card {
+    transition: 0.25s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 1rem 2rem rgba(31, 58, 82, 0.15) !important;
+}
+
+.card img {
+    transition: 0.4s ease;
+}
+
+.card:hover img {
+    transform: scale(1.04);
+}
+
+.card .ratio {
+    overflow: hidden;
+}
+
+/* Forms */
+.form-control,
+.form-select {
+    border-radius: 0.6rem;
+    padding: 0.7rem 0.9rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--barkea-blue);
+    box-shadow: 0 0 0 0.2rem rgba(47, 93, 130, 0.2);
+}
+
+textarea.form-control {
+    resize: vertical;
+}
+
+/* Gallery */
+#gallery-filters .btn {
+    border-radius: 0.6rem;
+}
+
+/* Images */
+.object-fit-cover {
+    object-fit: cover;
+}
+
+/* Footer */
+footer a {
+    transition: 0.25s ease;
+}
+
+footer a:hover {
+    color: #fff !important;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    main > section:first-child {
+        min-height: 35vh;
+    }
+
+    .navbar {
+        min-height: 64px;
+    }
+}
+
+

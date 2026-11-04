@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Barkea Resort | {{ villa.name }}{% endblock %}
+{% block meta_description %}{{ villa.name }} - {{ villa.rooms }} | {{ villa.area }} m². Modern villa with private plot, veranda and parking space.{% endblock %}
+
+{% block content %}
+<div class="py-5 bg-white">
+    <div class="container">
+
+        <!-- Overview: name, typology, area, description -->
+        <section class="mb-5 pb-4">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <div class="ratio ratio-4x3">
+                        <img src="{% static villa.image %}" alt="{{ villa.name }}" class="object-fit-cover rounded-4 shadow-sm">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <a href="{% url 'villas' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 mb-3"><i class="bi bi-chevron-left"></i> Back to Villas</a>
+                    <h1 class="display-5 fw-bold mb-2">{{ villa.name }}</h1>
+                    <p class="fs-4 fw-semibold text-secondary mb-3">{{ villa.rooms }} | {{ villa.area }} m²</p>
+                    <p class="text-muted fs-5 mb-3">{{ villa.description }}</p>
+                    <p class="text-muted mb-4">{{ villa.area }} m² of living space on {{ villa.floors }} floors, with {{ villa.bedrooms }} bedrooms and {{ villa.bathrooms }} bathrooms, set on a private plot of {{ villa.plot }} m². Includes a large veranda and parking space.</p>
+                    <a href="{% url 'contact' %}" class="btn btn-primary btn-lg rounded-3 px-4 fw-semibold">Request Information <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key facts -->
+        <section class="mb-5">
+            <div class="row g-3 text-center">
+                <div class="col-6 col-md-3">
+                    <div class="bg-light rounded-4 p-3 h-100">
+                        <i class="bi bi-house-door fs-3 text-primary"></i>
+                        <div class="h5 fw-bold mb-0 mt-2">{{ villa.rooms }}</div>
+                        <div class="small text-muted">Typology</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="bg-light rounded-4 p-3 h-100">
+                        <i class="bi bi-aspect-ratio fs-3 text-primary"></i>
+                        <div class="h5 fw-bold mb-0 mt-2">{{ villa.area }} m²</div>
+                        <div class="small text-muted">Living area</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="bg-light rounded-4 p-3 h-100">
+                        <i class="bi bi-layers fs-3 text-primary"></i>
+                        <div class="h5 fw-bold mb-0 mt-2">{{ villa.floors }}</div>
+                        <div class="small text-muted">Floors</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="bg-light rounded-4 p-3 h-100">
+                        <i class="bi bi-tree fs-3 text-primary"></i>
+                        <div class="h5 fw-bold mb-0 mt-2">{{ villa.plot }} m²</div>
+                        <div class="small text-muted">Private plot</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="my-5 pt-3">
+            <h2 class="fw-bold mb-4">Features</h2>
+            <div class="row g-3">
+                {% for feature in villa.features %}
+                <div class="col-md-4"><i class="bi {{ feature.icon }} text-primary fs-4 me-2"></i><span class="text-secondary">{{ feature.text }}</span></div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Floor plans -->
+        <section class="my-5 pt-3">
+            <h2 class="fw-bold mb-4">Floor Plans</h2>
+
+            <ul class="nav nav-pills gap-2 mb-4" id="planTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active px-4 fw-semibold" id="ground-tab" data-bs-toggle="pill" data-bs-target="#ground-pane" type="button" role="tab" aria-controls="ground-pane" aria-selected="true">Ground Floor</button>
+                </li>
+                {% if villa.floors >= 2 %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link px-4 fw-semibold" id="first-tab" data-bs-toggle="pill" data-bs-target="#first-pane" type="button" role="tab" aria-controls="first-pane" aria-selected="false">First Floor</button>
+                </li>
+                {% endif %}
+                {% if villa.floors >= 3 %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link px-4 fw-semibold" id="second-tab" data-bs-toggle="pill" data-bs-target="#second-pane" type="button" role="tab" aria-controls="second-pane" aria-selected="false">Second Floor</button>
+                </li>
+                {% endif %}
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="ground-pane" role="tabpanel" aria-labelledby="ground-tab" tabindex="0">
+                    <div class="card border-0 bg-light p-3 rounded-4 text-center">
+                        <div class="bg-white rounded-3 p-3 shadow-sm mb-3">
+                            <img src="{% static villa.plan_ground %}" alt="{{ villa.name }} Ground Floor Plan" class="img-fluid">
+                        </div>
+                        <span class="fw-semibold text-secondary">Ground Floor Plan</span>
+                    </div>
+                </div>
+                {% if villa.floors >= 2 %}
+                <div class="tab-pane fade" id="first-pane" role="tabpanel" aria-labelledby="first-tab" tabindex="0">
+                    <div class="card border-0 bg-light p-3 rounded-4 text-center">
+                        <div class="bg-white rounded-3 p-3 shadow-sm mb-3">
+                            <img src="{% static villa.plan_first %}" alt="{{ villa.name }} First Floor Plan" class="img-fluid">
+                        </div>
+                        <span class="fw-semibold text-secondary">First Floor Plan</span>
+                    </div>
+                </div>
+                {% endif %}
+                {% if villa.floors >= 3 %}
+                <div class="tab-pane fade" id="second-pane" role="tabpanel" aria-labelledby="second-tab" tabindex="0">
+                    <div class="card border-0 bg-light p-3 rounded-4 text-center">
+                        <div class="bg-white rounded-3 p-3 shadow-sm mb-3">
+                            <img src="{% static villa.plan_second %}" alt="{{ villa.name }} Second Floor Plan" class="img-fluid">
+                        </div>
+                        <span class="fw-semibold text-secondary">Second Floor Plan</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Room layout -->
+        <section class="my-5 pt-3">
+            <h2 class="fw-bold mb-4">Room Layout</h2>
+            <div class="row g-3 text-center">
+                <div class="col-4 col-md">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-3 mb-2"><i class="bi bi-tv fs-3 text-primary"></i></div>
+                    <p class="fw-semibold text-secondary mb-0 small">Living Room</p>
+                </div>
+                <div class="col-4 col-md">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-3 mb-2"><i class="bi bi-cup-hot fs-3 text-primary"></i></div>
+                    <p class="fw-semibold text-secondary mb-0 small">Kitchen</p>
+                </div>
+                <div class="col-4 col-md">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-3 mb-2"><i class="bi bi-door-closed fs-3 text-primary"></i></div>
+                    <p class="fw-semibold text-secondary mb-0 small">{{ villa.bedrooms }} Bedrooms</p>
+                </div>
+                <div class="col-4 col-md">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-3 mb-2"><i class="bi bi-droplet fs-3 text-primary"></i></div>
+                    <p class="fw-semibold text-secondary mb-0 small">{{ villa.bathrooms }} Bathrooms</p>
+                </div>
+                <div class="col-4 col-md">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-3 mb-2"><i class="bi bi-sun fs-3 text-primary"></i></div>
+                    <p class="fw-semibold text-secondary mb-0 small">Terrace</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="my-5 pt-3">
+            <h2 class="fw-bold mb-4">Gallery</h2>
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <div class="ratio ratio-1x1"><img src="{% static villa.image %}" alt="{{ villa.name }} exterior" class="object-fit-cover rounded-4 shadow-sm"></div>
+                </div>
+                {% for item in villa.gallery %}
+                <div class="col-6 col-md-3">
+                    <div class="ratio ratio-1x1"><img src="{% static item.src %}" alt="{{ villa.name }}{% if item.label %} - {{ item.label }}{% endif %}" class="object-fit-cover rounded-4 shadow-sm"></div>
+                    {% if item.label %}<div class="small text-muted text-center mt-1">{{ item.label }}</div>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Plot & exterior -->
+        <section class="my-5 pt-3">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <div class="ratio ratio-16x9">
+                        <img src="{% static 'image/hero-home.jpg' %}" alt="Plot and exterior" class="object-fit-cover rounded-4 shadow-sm">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="fw-bold mb-3">Plot &amp; Exterior Details</h2>
+                    <ul class="list-unstyled fs-5 text-secondary mb-0">
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Private plot ({{ villa.plot }} m²)</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Veranda / Terrace</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Private parking</li>
+                        <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Garden area</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="mt-5 pt-3">
+            <div class="p-5 rounded-4 text-white bg-dark">
+                <div class="row align-items-center">
+                    <div class="col-lg-8 mb-3 mb-lg-0">
+                        <h2 class="fw-bold mb-2">Interested in this villa?</h2>
+                        <p class="mb-0 opacity-75 fs-5">Request more information or schedule a visit to see this villa in person.</p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="{% url 'contact' %}" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold">Request Information <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}

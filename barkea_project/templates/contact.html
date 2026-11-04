@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Barkea Resort | Contact{% endblock %}
+{% block meta_description %}Contact Us - Get in touch with Barkea Resort. Send a message or schedule a visit.{% endblock %}
+
+{% block content %}
+
+{% include 'partials/page_hero.html' with title="Get in Touch" subtitle="We'd love to hear from you. Send us a message or request more information about the project." %}
+
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row g-5">
+
+            <!-- Form -->
+            <div class="col-lg-7">
+                <div class="p-4 p-md-5 rounded-4 border shadow-sm bg-white">
+                    <h2 class="fw-bold h3 mb-4">Information Request</h2>
+
+                    <form action="{% url 'contact' %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="fullname" class="form-label fw-semibold small">Full Name *</label>
+                            <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Your name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold small">Email *</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label fw-semibold small">Phone *</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="+355 6X XXX XXX" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="message" class="form-label fw-semibold small">Message *</label>
+                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Your message..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-semibold">Send Message <i class="bi bi-arrow-right"></i></button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="col-lg-5">
+                <div class="d-flex flex-column gap-4">
+
+                    <div class="p-4 rounded-4 border shadow-sm bg-white">
+                        <h2 class="fw-bold h4 mb-4">Contact Details</h2>
+
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-telephone text-primary"></i></div>
+                            <div>
+                                <span class="text-muted small">Phone</span>
+                                <p class="fw-semibold mb-0">+355 69 123 4567</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-envelope text-primary"></i></div>
+                            <div>
+                                <span class="text-muted small">Email</span>
+                                <p class="fw-semibold mb-0">info@barkearesort.al</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-geo-alt text-primary"></i></div>
+                            <div>
+                                <span class="text-muted small">Address</span>
+                                <p class="fw-semibold mb-0">Lundër / Farkë<br>Tirana, Albania</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-4 border shadow-sm bg-white">
+                        <h2 class="fw-bold h4 mb-2">Visit Planning</h2>
+                        <p class="text-secondary small mb-4">Book a visit to our site and see the project in person.</p>
+                        <a href="#fullname" class="btn btn-primary w-100 py-2 fw-semibold">Schedule a Visit <i class="bi bi-arrow-right"></i></a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Bottom banner -->
+<section class="pb-5 bg-white">
+    <div class="container">
+        <div class="position-relative text-white text-center rounded-4 overflow-hidden">
+            <img src="{% static 'images/hero-bg.jpg' %}" alt="" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-50"></div>
+            <div class="position-relative py-5 px-3">
+                <div class="py-4">
+                    <h2 class="fw-bold mb-2">Your new life starts here.</h2>
+                    <p class="mb-0 opacity-75 fs-5">Nature. Comfort. Modern Living.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

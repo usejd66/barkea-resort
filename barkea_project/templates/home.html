@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Barkea Resort | Home{% endblock %}
+{% block meta_description %}Barkea Resort - modern villas from 3+1 to 6+1 in a gated, green community in Lundër / Farkë, just 8 km from Tirana.{% endblock %}
+
+{% block content %}
+
+<!-- 1. Hero -->
+<section class="position-relative text-white overflow-hidden">
+    <img src="{% static 'image/hero-home.jpg' %}" alt="" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+    <div class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-50"></div>
+    <div class="container position-relative py-5">
+        <div class="row py-5">
+            <div class="col-lg-7 py-5">
+                <span class="text-uppercase fw-bold small opacity-75">Barkea Resort</span>
+                <h1 class="display-3 fw-bold my-3">Live the Nature.<br>Own the Future.</h1>
+                <p class="lead mb-4 opacity-90">A premium residential complex of modern villas in Lundër / Farkë, just 8 km from Tirana.</p>
+                <a href="{% url 'villas' %}" class="btn btn-light btn-lg rounded-3 fw-semibold px-4">Explore Villas <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 2. Key facts: what Barkea Resort is at a glance -->
+<section class="bg-dark text-white py-4">
+    <div class="container">
+        <div class="row text-center g-3">
+            <div class="col-6 col-md-3">
+                <div class="h4 fw-bold mb-0">8 km</div>
+                <div class="small opacity-75">from Tirana</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="h4 fw-bold mb-0">3+1 to 6+1</div>
+                <div class="small opacity-75">villa typologies</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="h4 fw-bold mb-0">180 &ndash; 320 m²</div>
+                <div class="small opacity-75">living area</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="h4 fw-bold mb-0">Gated</div>
+                <div class="small opacity-75">private community</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3. About the Project -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <h2 class="fw-bold mb-3">About the Project</h2>
+                <p class="text-secondary fs-5 mb-3">Barkea Resort is a unique residential complex that combines modern architecture, nature and comfort, offering a high standard of living in one of the most peaceful areas near Tirana.</p>
+                <p class="text-secondary mb-4">Every villa is designed with its own private plot, garden and parking space, so you can enjoy privacy and fresh air while staying close to the city.</p>
+                <a href="{% url 'about' %}" class="btn btn-primary btn-lg rounded-3 px-4">Learn More <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="col-lg-5">
+                <div class="ratio ratio-16x9">
+                    <img src="{% static 'image/about-projekt.jpg' %}" alt="Barkea Resort villas surrounded by greenery" class="object-fit-cover rounded-4 shadow-sm">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Why Barkea (advantages) -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <h2 class="fw-bold mb-2">Why Barkea?</h2>
+        <p class="text-secondary mb-5">Four reasons why Barkea Resort is the right place to call home.</p>
+        <div class="row g-4 text-center">
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-4 mb-3">
+                    <i class="bi bi-geo-alt fs-3 text-primary"></i>
+                </div>
+                <h3 class="h5 fw-bold mb-1">Prime Location</h3>
+                <p class="text-muted small mb-0">Just 8 km from Tirana, with easy access to the city and main roads.</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-4 mb-3">
+                    <i class="bi bi-shield-lock fs-3 text-primary"></i>
+                </div>
+                <h3 class="h5 fw-bold mb-1">Privacy</h3>
+                <p class="text-muted small mb-0">A gated community with controlled access for a safe and quiet daily life.</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-4 mb-3">
+                    <i class="bi bi-building fs-3 text-primary"></i>
+                </div>
+                <h3 class="h5 fw-bold mb-1">Modern Architecture</h3>
+                <p class="text-muted small mb-0">Timeless, contemporary design with clean lines and quality materials.</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-4 mb-3">
+                    <i class="bi bi-tree fs-3 text-primary"></i>
+                </div>
+                <h3 class="h5 fw-bold mb-1">Green Environment</h3>
+                <p class="text-muted small mb-0">Surrounded by nature, with fresh air and green spaces all around.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Villa Typologies -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <h2 class="fw-bold mb-2">Villa Typologies</h2>
+        <p class="text-secondary mb-4">From 3+1 to 6+1, each villa type offers comfort, privacy and modern living, with its own private plot.</p>
+        <div class="row g-4 align-items-center">
+            {% for villa in villas %}
+            <div class="col-md-3">
+                <a href="{% url 'villa_detail' villa.id %}" class="text-decoration-none">
+                    <article class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="ratio ratio-4x3">
+                            <img src="{% static villa.image %}" alt="Villa {{ villa.name }}" class="object-fit-cover">
+                        </div>
+                        <div class="card-body p-3">
+                            <h3 class="h5 fw-bold text-dark mb-1">{{ villa.name }}</h3>
+                            <p class="text-muted small mb-1">{{ villa.rooms }} | {{ villa.area }} m²</p>
+                            <p class="text-secondary small mb-0">{{ villa.bedrooms }} bedrooms &middot; {{ villa.floors }} floors &middot; {{ villa.plot }} m² plot</p>
+                        </div>
+                    </article>
+                </a>
+            </div>
+            {% endfor %}
+            <div class="col-md-3">
+                <a href="{% url 'villas' %}" class="btn btn-primary btn-lg rounded-3 w-100 py-3">View All Villas <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Selected Gallery -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <h2 class="fw-bold mb-2">Selected Gallery</h2>
+        <p class="text-secondary mb-4">A selection of renders showing the architecture, surroundings and atmosphere of Barkea Resort.</p>
+        <div class="row g-4 align-items-center">
+            <div class="col-6 col-md-2">
+                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-1.jpg' %}" alt="Barkea Resort render 1" class="object-fit-cover rounded-4 shadow-sm"></div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-2.jpg' %}" alt="Barkea Resort render 2" class="object-fit-cover rounded-4 shadow-sm"></div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-3.jpg' %}" alt="Barkea Resort render 3" class="object-fit-cover rounded-4 shadow-sm"></div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-4.jpg' %}" alt="Barkea Resort render 4" class="object-fit-cover rounded-4 shadow-sm"></div>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'gallery' %}" class="btn btn-primary btn-lg rounded-3 w-100 py-3">View Gallery <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 7. Location Preview -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">Location</h2>
+                <p class="text-secondary fs-5 mb-4">Lundër / Farkë is one of the most desirable areas near Tirana, known for its green surroundings, fresh air and peaceful residential environment.</p>
+                <ul class="list-unstyled mb-4">
+                    <li class="d-flex align-items-center gap-3 mb-3">
+                        <i class="bi bi-geo-alt fs-4 text-primary"></i>
+                        <span><strong>8 km</strong> from Tirana Center</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-3 mb-3">
+                        <i class="bi bi-tree fs-4 text-primary"></i>
+                        <span><strong>Green Environment</strong> &ndash; nature &amp; clean air</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-3">
+                        <i class="bi bi-signpost-split fs-4 text-primary"></i>
+                        <span><strong>Easy Access</strong> &ndash; main roads &amp; infrastructure</span>
+                    </li>
+                </ul>
+                <a href="{% url 'location' %}" class="btn btn-primary btn-lg rounded-3 px-4">View Location <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="col-lg-6">
+                <div class="ratio ratio-4x3 rounded-4 overflow-hidden shadow-sm border">
+                    <iframe
+                        src="https://www.google.com/maps?q=Lunder,+Farke,+Tirana,+Albania&output=embed"
+                        class="border-0"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Barkea Resort Location Map"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 8. CTA: explore the villas or get in touch -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="p-5 rounded-4 bg-dark text-white">
+            <div class="row align-items-center">
+                <div class="col-lg-7 mb-4 mb-lg-0">
+                    <h2 class="fw-bold mb-2">Ready to see your future home?</h2>
+                    <p class="mb-0 opacity-75 fs-5">Explore the villas, or contact us today to schedule a visit or request more information.</p>
+                </div>
+                <div class="col-lg-5 d-flex flex-column flex-sm-row gap-3 justify-content-lg-end">
+                    <a href="{% url 'villas' %}" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-semibold">Explore Villas</a>
+                    <a href="{% url 'contact' %}" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold">Contact Us <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

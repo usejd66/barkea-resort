@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Barkea Resort | Location{% endblock %}
+{% block meta_description %}Location - Lundër / Farkë, 8 km from Tirana. Discover the prime location of Barkea Resort.{% endblock %}
+
+{% block content %}
+
+{% include 'partials/page_hero.html' with title="Location" subtitle="Lundër / Farkë — 8 km from Tirana" %}
+
+<!-- Info + map -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row g-5 align-items-center">
+
+            <div class="col-lg-5">
+                <p class="text-secondary fs-5 mb-4">Lundër / Farkë is one of the most desirable areas near Tirana, known for its green surroundings, fresh air and peaceful residential environment.</p>
+
+                <div class="d-flex flex-column gap-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-geo-alt fs-4 text-primary"></i></div>
+                        <div><h2 class="h6 fw-bold mb-0">8 km</h2><span class="small text-muted">from Tirana Center</span></div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-tree fs-4 text-primary"></i></div>
+                        <div><h2 class="h6 fw-bold mb-0">Green Environment</h2><span class="small text-muted">Nature &amp; clean air</span></div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-house-heart fs-4 text-primary"></i></div>
+                        <div><h2 class="h6 fw-bold mb-0">Quiet Residential Area</h2><span class="small text-muted">Privacy &amp; security</span></div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-signpost-2 fs-4 text-primary"></i></div>
+                        <div><h2 class="h6 fw-bold mb-0">Easy Access</h2><span class="small text-muted">Main roads &amp; infrastructure</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="ratio ratio-4x3 rounded-4 overflow-hidden shadow-sm border">
+                    <iframe
+                        src="https://www.google.com/maps?q=Lunder,+Farke,+Tirana,+Albania&output=embed"
+                        class="border-0"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Barkea Resort Location Map"></iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Why Lundër / Farkë -->
+<section class="pb-5 bg-white">
+    <div class="container">
+        <div class="p-4 p-md-5 rounded-4 bg-light shadow-sm">
+            <h2 class="fw-bold h3 mb-4">Why Lundër / Farkë?</h2>
+            <div class="row g-4 text-center">
+                <div class="col-6 col-md-3">
+                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-3 mb-3"><i class="bi bi-geo-alt fs-3 text-primary"></i></div>
+                    <h3 class="h6 fw-semibold mb-0">Close to Tirana</h3>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-3 mb-3"><i class="bi bi-flower1 fs-3 text-primary"></i></div>
+                    <h3 class="h6 fw-semibold mb-0">Green nature</h3>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-3 mb-3"><i class="bi bi-gem fs-3 text-primary"></i></div>
+                    <h3 class="h6 fw-semibold mb-0">High living quality</h3>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm p-3 mb-3"><i class="bi bi-graph-up-arrow fs-3 text-primary"></i></div>
+                    <h3 class="h6 fw-semibold mb-0">Growing value</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

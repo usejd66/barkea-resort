@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Barkea Resort | Villa Typologies{% endblock %}
+{% block meta_description %}Our Villa Typologies - Find the perfect villa for your lifestyle at Barkea Resort.{% endblock %}
+
+{% block content %}
+
+{% include 'partials/page_hero.html' with title="Our Villa Typologies" subtitle="Find the perfect villa for your lifestyle." %}
+
+<!-- Filter bar -->
+<section class="py-4 bg-white border-bottom">
+    <div class="container">
+        <form id="villa-filter" class="row g-3 align-items-center">
+            <div class="col-12 col-md-auto">
+                <span class="fw-bold fs-5">Filter by:</span>
+            </div>
+            <div class="col-12 col-md-3">
+                <select class="form-select" id="filter-area" aria-label="Filter by Size">
+                    <option value="" selected>All Sizes</option>
+                    <option value="180">180 m²</option>
+                    <option value="220">220 m²</option>
+                    <option value="280">280 m²</option>
+                    <option value="320">320 m²</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3">
+                <select class="form-select" id="filter-floors" aria-label="Filter by Floors">
+                    <option value="" selected>All Floors</option>
+                    <option value="2">2 Floors</option>
+                    <option value="3">3 Floors</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3">
+                <select class="form-select" id="filter-type" aria-label="Filter by Typology">
+                    <option value="" selected>All Typologies</option>
+                    <option value="type-a">Type A</option>
+                    <option value="type-b">Type B</option>
+                    <option value="type-c">Type C</option>
+                    <option value="type-d">Type D</option>
+                </select>
+            </div>
+            <div class="col-12 col-md">
+                <button type="reset" class="btn btn-outline-secondary w-100 fw-semibold">Reset</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Villas grid -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row g-4" id="villa-grid">
+            {% for villa in villas %}
+            <div class="col-md-6" data-villa data-area="{{ villa.area }}" data-floors="{{ villa.floors }}" data-type="{{ villa.type }}">
+                <article class="card h-100 border shadow-sm rounded-4 overflow-hidden p-3">
+                    <div class="ratio ratio-16x9">
+                        <img src="{% static villa.image %}" alt="Villa {{ villa.name }}" class="object-fit-cover rounded-3">
+                    </div>
+                    <div class="card-body pt-3 px-1 pb-0">
+                        <h2 class="h4 fw-bold mb-1">{{ villa.name }}</h2>
+                        <p class="text-secondary fw-semibold mb-3">{{ villa.rooms }} | {{ villa.area }} m²</p>
+                        <div class="row text-center my-3 py-2 bg-light rounded-3 g-2">
+                            <div class="col-4"><i class="bi bi-door-closed fs-4 text-primary d-block"></i><span class="small text-muted">{{ villa.bedrooms }} Bedrooms</span></div>
+                            <div class="col-4"><i class="bi bi-droplet fs-4 text-primary d-block"></i><span class="small text-muted">{{ villa.bathrooms }} Bathrooms</span></div>
+                            <div class="col-4"><i class="bi bi-layers fs-4 text-primary d-block"></i><span class="small text-muted">{{ villa.floors }} Floors</span></div>
+                        </div>
+                        <a href="{% url 'villa_detail' villa.id %}" class="btn btn-primary rounded-3 w-100 py-2 fw-semibold">View Details <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+        <p id="no-results" class="text-center text-muted fs-5 d-none mt-4">No villas match your filters.</p>
+    </div>
+</section>
+
+<!-- Individual plots -->
+<section class="py-5 bg-light">
+    <div class="container py-3">
+        <h2 class="fw-bold mb-4">Individual Plots</h2>
+        <div class="row align-items-center g-4 bg-white p-4 rounded-4 shadow-sm mx-0">
+            <div class="col-lg-6">
+                <div class="ratio ratio-21x9">
+                    <img src="{% static 'image/hero-home.jpg' %}" alt="Individual plots at Barkea Resort" class="object-fit-cover rounded-3">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <p class="fs-5 text-secondary mb-4">Each villa comes with its own private plot, garden and parking space.</p>
+                <a href="{% url 'contact' %}" class="btn btn-primary rounded-3 px-4 py-2 fw-semibold">Ask About Plots <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

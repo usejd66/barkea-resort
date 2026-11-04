@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Barkea Resort | About{% endblock %}
+{% block meta_description %}About Barkea Resort - More than a home, a lifestyle.{% endblock %}
+
+{% block content %}
+
+{% include 'partials/page_hero.html' with title="About Barkea Resort" subtitle="More than a home — a lifestyle." %}
+
+<!-- Content blocks -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+
+        <div class="row align-items-center g-5 mb-5">
+            <div class="col-md-8">
+                <h2 class="fw-bold h3 mb-3">The Concept</h2>
+                <p class="text-secondary">Barkea Resort is designed as a modern residential community that blends contemporary architecture with the natural beauty of Lundër / Farkë. The project offers a peaceful and secure lifestyle, with spacious villas, green areas and premium infrastructure.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="ratio ratio-4x3"><img src="{% static 'images/villas/villa-a.jpg' %}" alt="The Concept" class="object-fit-cover rounded-4 shadow-sm"></div>
+            </div>
+        </div>
+
+        <div class="row align-items-center g-5 mb-5">
+            <div class="col-md-8">
+                <h2 class="fw-bold h3 mb-3">Architectural Language</h2>
+                <p class="text-secondary">The architecture follows a modern and minimalist style, with clean lines, natural materials and large openings that connect the interior with the surrounding nature.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="ratio ratio-4x3"><img src="{% static 'images/villas/villa-b.jpg' %}" alt="Architectural Language" class="object-fit-cover rounded-4 shadow-sm"></div>
+            </div>
+        </div>
+
+        <div class="row align-items-center g-5 mb-5">
+            <div class="col-md-8">
+                <h2 class="fw-bold h3 mb-3">Construction Standards &amp; Materials</h2>
+                <p class="text-secondary">We use high-quality materials and modern construction standards to ensure durability, safety and long-term value. The project meets European standards for energy efficiency and sustainability.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="ratio ratio-4x3"><img src="{% static 'images/villas/villa-c.jpg' %}" alt="Construction Standards" class="object-fit-cover rounded-4 shadow-sm"></div>
+            </div>
+        </div>
+
+        <div class="row align-items-center g-5">
+            <div class="col-md-8">
+                <h2 class="fw-bold h3 mb-3">Energy Efficiency &amp; Thermal Insulation</h2>
+                <p class="text-secondary">Each villa is designed with advanced thermal insulation systems, energy-efficient windows and modern heating/cooling solutions for maximum comfort and lower energy consumption.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="ratio ratio-4x3"><img src="{% static 'images/villas/villa-d.jpg' %}" alt="Energy Efficiency" class="object-fit-cover rounded-4 shadow-sm"></div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Our Developer -->
+<section class="py-5 bg-dark text-white">
+    <div class="container py-3">
+        <div class="row align-items-center g-4">
+            <div class="col-auto">
+                <i class="bi bi-building display-3"></i>
+            </div>
+            <div class="col">
+                <h2 class="fw-bold h3 mb-2">Our Developer</h2>
+                <p class="mb-0 opacity-75">Barkea Resort is developed by a trusted real estate company with years of experience in residential projects, ensuring quality, transparency and on-time delivery.</p>
+            </div>
+            <div class="col-lg-auto">
+                <a href="{% url 'contact' %}" class="btn btn-outline-light rounded-3 px-4">Our Company <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-4">
+                <i class="bi bi-rocket-takeoff fs-2 text-primary"></i>
+                <p class="display-6 fw-bold mb-0">10+</p>
+                <p class="text-muted small mb-0">Years of Experience</p>
+            </div>
+            <div class="col-4">
+                <i class="bi bi-clipboard-check fs-2 text-primary"></i>
+                <p class="display-6 fw-bold mb-0">20+</p>
+                <p class="text-muted small mb-0">Completed Projects</p>
+            </div>
+            <div class="col-4">
+                <i class="bi bi-people fs-2 text-primary"></i>
+                <p class="display-6 fw-bold mb-0">100+</p>
+                <p class="text-muted small mb-0">Happy Clients</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
