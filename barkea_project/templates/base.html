@@ -19,6 +19,8 @@
 </head>
 <body>
 
+    <a class="visually-hidden-focusable" href="#main-content">Skip to main content</a>
+
     {% with url_name=request.resolver_match.url_name %}
     <header class="sticky-top bg-dark border-bottom border-secondary">
         <nav class="navbar navbar-expand-lg navbar-dark container py-3" aria-label="Main Navigation">
@@ -30,11 +32,11 @@
 
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-3">
-                    <li class="nav-item"><a class="nav-link {% if url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link {% if url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link {% if url_name == 'villas' or url_name == 'villa_detail' %}active{% endif %}" href="{% url 'villas' %}">Villas</a></li>
-                    <li class="nav-item"><a class="nav-link {% if url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">Gallery</a></li>
-                    <li class="nav-item"><a class="nav-link {% if url_name == 'location' %}active{% endif %}" href="{% url 'location' %}">Location</a></li>
+                    <li class="nav-item"><a class="nav-link {% if url_name == 'home' %}active{% endif %}" href="{% url 'home' %}"{% if url_name == 'home' %} aria-current="page"{% endif %}>Home</a></li>
+                    <li class="nav-item"><a class="nav-link {% if url_name == 'about' %}active{% endif %}" href="{% url 'about' %}"{% if url_name == 'about' %} aria-current="page"{% endif %}>About Us</a></li>
+                    <li class="nav-item"><a class="nav-link {% if url_name == 'villas' or url_name == 'villa_detail' %}active{% endif %}" href="{% url 'villas' %}"{% if url_name == 'villas' or url_name == 'villa_detail' %} aria-current="page"{% endif %}>Villas</a></li>
+                    <li class="nav-item"><a class="nav-link {% if url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}"{% if url_name == 'gallery' %} aria-current="page"{% endif %}>Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link {% if url_name == 'location' %}active{% endif %}" href="{% url 'location' %}"{% if url_name == 'location' %} aria-current="page"{% endif %}>Location</a></li>
                     <li class="nav-item ms-lg-2">
                         <a class="btn btn-light px-4 rounded-pill fw-semibold" href="{% url 'contact' %}">Contact</a>
                     </li>

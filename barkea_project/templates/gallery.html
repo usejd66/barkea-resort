@@ -2,117 +2,266 @@
 {% load static %}
 
 {% block title %}Barkea Resort | Gallery{% endblock %}
-{% block meta_description %}Gallery - Explore the beauty of Barkea Resort including interior, exterior views, renders, and construction progress.{% endblock %}
+{% block meta_description %}Explore Barkea Resort villas, interiors, outdoor spaces and amenities.{% endblock %}
 
 {% block content %}
 
-{% include 'partials/page_hero.html' with title="Gallery" subtitle="Explore the beauty of Barkea Resort" %}
+{% include 'partials/page_hero.html' with title="Gallery" subtitle="Explore the villas, interiors and outdoor spaces at Barkea Resort." %}
 
-<!-- Filter tabs -->
-<section class="pt-4 bg-white">
+<section class="py-4 py-lg-5 bg-white" aria-labelledby="gallery-heading">
     <div class="container">
-        <div class="d-flex flex-wrap gap-2" id="gallery-filters">
-            <button type="button" class="btn btn-primary px-4 fw-semibold" data-filter="all" aria-pressed="true">All</button>
-            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="interior" aria-pressed="false">Interior</button>
-            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="exterior" aria-pressed="false">Exterior</button>
-            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="renders" aria-pressed="false">Renders</button>
-            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="construction" aria-pressed="false">Construction Progress</button>
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
+            <div>
+                <h2 class="h3 fw-bold mb-1" id="gallery-heading">Explore the resort</h2>
+                <p class="text-secondary mb-0">Select a photo to view it in full size.</p>
+            </div>
+            <div class="gallery-filters d-flex flex-wrap gap-2" id="gallery-filters" role="group" aria-label="Filter gallery photos">
+                <button type="button" class="btn btn-primary px-3 fw-semibold" data-filter="all" aria-pressed="true">All</button>
+                <button type="button" class="btn btn-outline-secondary px-3 fw-semibold" data-filter="exterior" aria-pressed="false">Exterior</button>
+                <button type="button" class="btn btn-outline-secondary px-3 fw-semibold" data-filter="interior" aria-pressed="false">Interiors</button>
+                <button type="button" class="btn btn-outline-secondary px-3 fw-semibold" data-filter="amenities" aria-pressed="false">Outdoor spaces</button>
+            </div>
+        </div>
+
+        <p class="visually-hidden" id="gallery-results" aria-live="polite" aria-atomic="true"></p>
+
+        <div class="row g-3 g-lg-4" id="gallery-grid">
+            <div class="col-6 col-lg-4" data-gallery-item data-category="exterior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/gallery/render-1.jpg' %}"
+                            data-gallery-alt="Modern villas set among landscaped gardens and trees"
+                            data-gallery-caption="Modern villas and landscaped gardens"
+                            aria-label="View photo: Modern villas and landscaped gardens">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/render-1.jpg' %}" alt="Modern villas set among landscaped gardens and trees" width="900" height="1200" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Modern villas and landscaped gardens</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="exterior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/gallery/render-2.jpg' %}"
+                            data-gallery-alt="Contemporary resort building framed by palm trees"
+                            data-gallery-caption="Contemporary resort architecture"
+                            aria-label="View photo: Contemporary resort architecture">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/render-2.jpg' %}" alt="Contemporary resort building framed by palm trees" width="800" height="1200" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Contemporary resort architecture</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="amenities">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/gallery/render-3.jpg' %}"
+                            data-gallery-alt="Outdoor lounge beside the resort swimming pool"
+                            data-gallery-caption="Poolside lounge and outdoor living"
+                            aria-label="View photo: Poolside lounge and outdoor living">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/render-3.jpg' %}" alt="Outdoor lounge beside the resort swimming pool" width="900" height="1200" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Poolside lounge and outdoor living</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="interior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/gallery/render-4.jpg' %}"
+                            data-gallery-alt="Bedroom with a timber ceiling and large glazed doors"
+                            data-gallery-caption="Bedroom with garden views"
+                            aria-label="View photo: Bedroom with garden views">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/render-4.jpg' %}" alt="Bedroom with a timber ceiling and large glazed doors" width="800" height="1200" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Bedroom with garden views</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="interior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-a-kitchen.jpg' %}"
+                            data-gallery-alt="Modern open-plan kitchen and dining area"
+                            data-gallery-caption="Open-plan kitchen and dining area"
+                            aria-label="View photo: Open-plan kitchen and dining area">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-a-kitchen.jpg' %}" alt="Modern open-plan kitchen and dining area" width="1200" height="801" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Open-plan kitchen and dining area</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="interior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-a-bedroom.jpg' %}"
+                            data-gallery-alt="Bright bedroom with a balcony and natural timber details"
+                            data-gallery-caption="Bedroom with balcony access"
+                            aria-label="View photo: Bedroom with balcony access">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-a-bedroom.jpg' %}" alt="Bright bedroom with a balcony and natural timber details" width="1200" height="800" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Bedroom with balcony access</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="interior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-a-bedroom-1.jpg' %}"
+                            data-gallery-alt="Additional bedroom with a large window"
+                            data-gallery-caption="Bedroom with natural light"
+                            aria-label="View photo: Bedroom with natural light">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-a-bedroom-1.jpg' %}" alt="Additional bedroom with a large window" width="1200" height="800" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Bedroom with natural light</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="interior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-a-bathroom.jpg' %}"
+                            data-gallery-alt="Bathroom finished in warm natural stone"
+                            data-gallery-caption="Natural stone bathroom"
+                            aria-label="View photo: Natural stone bathroom">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-a-bathroom.jpg' %}" alt="Bathroom finished in warm natural stone" width="800" height="1200" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Natural stone bathroom</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="interior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-a-bathroom-1.jpg' %}"
+                            data-gallery-alt="Compact bathroom with a glass shower and natural finishes"
+                            data-gallery-caption="Bathroom with glass shower"
+                            aria-label="View photo: Bathroom with glass shower">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-a-bathroom-1.jpg' %}" alt="Compact bathroom with a glass shower and natural finishes" width="888" height="1200" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Bathroom with glass shower</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="interior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-a-bathroom-3.jpg' %}"
+                            data-gallery-alt="Contemporary bathroom with twin sinks and a large mirror"
+                            data-gallery-caption="Bathroom with twin sinks"
+                            aria-label="View photo: Bathroom with twin sinks">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-a-bathroom-3.jpg' %}" alt="Contemporary bathroom with twin sinks and a large mirror" width="1200" height="800" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Bathroom with twin sinks</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="exterior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-a.png' %}"
+                            data-gallery-alt="Exterior view of the Type A villa"
+                            data-gallery-caption="Type A villa"
+                            aria-label="View photo: Type A villa">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-a.jpg' %}" alt="Exterior view of the Type A villa" width="1200" height="818" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Type A villa</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="exterior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-b.png' %}"
+                            data-gallery-alt="Exterior view of the Type B villa"
+                            data-gallery-caption="Type B villa"
+                            aria-label="View photo: Type B villa">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-b.jpg' %}" alt="Exterior view of the Type B villa" width="1200" height="689" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Type B villa</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="exterior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-c.jpg' %}"
+                            data-gallery-alt="Exterior view of the Type C villa"
+                            data-gallery-caption="Type C villa"
+                            aria-label="View photo: Type C villa">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-c.jpg' %}" alt="Exterior view of the Type C villa" width="1200" height="801" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Type C villa</span>
+                    </button>
+                </article>
+            </div>
+
+            <div class="col-6 col-lg-4" data-gallery-item data-category="exterior">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{% static 'image/villas/type-d.jpg' %}"
+                            data-gallery-alt="Exterior view of the Type D villa"
+                            data-gallery-caption="Type D villa"
+                            aria-label="View photo: Type D villa">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{% static 'image/gallery/thumbnails/type-d.jpg' %}" alt="Exterior view of the Type D villa" width="1200" height="675" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">Type D villa</span>
+                    </button>
+                </article>
+            </div>
         </div>
     </div>
 </section>
-<!-- Carousel -->
-<section id="gallery-carousel-section" class="py-4 bg-white">
-    <div class="container">
-        <div id="galleryCarousel" class="carousel slide rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
 
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="2"></button>
-                <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="3"></button>
-            </div>
-
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="{% static 'image/gallery/render-1.jpg' %}" class="d-block w-100" alt="Exterior View">
-                </div>
-
-                <div class="carousel-item">
-                    <img src="{% static 'image/gallery/render-2.jpg' %}" class="d-block w-100" alt="Resort Render">
-                </div>
-
-                <div class="carousel-item">
-                    <img src="{% static 'image/gallery/render-3.jpg' %}" class="d-block w-100" alt="Interior View">
-                </div>
-
-                <div class="carousel-item">
-                    <img src="{% static 'image/gallery/render-4.jpg' %}" class="d-block w-100" alt="Construction Progress">
-                </div>
-            </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-                <span class="visually-hidden">Previous</span>
+<dialog class="gallery-lightbox" id="gallery-lightbox" aria-labelledby="lightbox-title">
+    <div class="gallery-lightbox-content">
+        <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
+            <h2 class="h5 mb-0 text-white" id="lightbox-title">Photo preview</h2>
+            <button type="button" class="btn btn-outline-light btn-sm" data-lightbox-close aria-label="Close photo preview">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+                <span class="visually-hidden">Close</span>
             </button>
-
-            <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-                <span class="visually-hidden">Next</span>
+        </div>
+        <div class="gallery-lightbox-stage">
+            <button type="button" class="btn btn-light gallery-lightbox-control" data-lightbox-previous aria-label="Previous photo">
+                <i class="bi bi-chevron-left" aria-hidden="true"></i>
             </button>
-
+            <img id="lightbox-image" alt="" decoding="async">
+            <button type="button" class="btn btn-light gallery-lightbox-control" data-lightbox-next aria-label="Next photo">
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="d-flex justify-content-between align-items-start gap-3 mt-3">
+            <p class="mb-0 text-white" id="lightbox-caption"></p>
+            <p class="mb-0 text-white-50 text-nowrap" id="lightbox-position" aria-live="polite"></p>
         </div>
     </div>
-</section>
-
-<!-- Grid -->
-<section class="py-5 bg-white">
-    <div class="container">
-        <div class="row g-4">
-
-            <div class="col-md-4" data-category="interior">
-                <article class="card h-100 border shadow-sm rounded-4 overflow-hidden p-3">
-                    <div class="ratio ratio-4x3"><img src="{% static 'image/gallery/render-3.jpg' %}" alt="Interior Views" class="object-fit-cover rounded-3"></div>
-                    <div class="card-body pt-3 px-1 pb-0"><h2 class="h5 fw-bold mb-0">Interior Views</h2></div>
-                </article>
-            </div>
-
-            <div class="col-md-4" data-category="exterior">
-                <article class="card h-100 border shadow-sm rounded-4 overflow-hidden p-3">
-                    <div class="ratio ratio-4x3"><img src="{% static 'image/gallery/render-1.jpg' %}" alt="Exterior Views" class="object-fit-cover rounded-3"></div>
-                    <div class="card-body pt-3 px-1 pb-0"><h2 class="h5 fw-bold mb-0">Exterior Views</h2></div>
-                </article>
-            </div>
-
-            <div class="col-md-4" data-category="renders">
-                <article class="card h-100 border shadow-sm rounded-4 overflow-hidden p-3">
-                    <div class="ratio ratio-4x3"><img src="{% static 'image/gallery/render-2.jpg' %}" alt="Renders" class="object-fit-cover rounded-3"></div>
-                    <div class="card-body pt-3 px-1 pb-0"><h2 class="h5 fw-bold mb-0">Renders</h2></div>
-                </article>
-            </div>
-
-            <div class="col-md-4" data-category="construction">
-                <article class="card h-100 border shadow-sm rounded-4 overflow-hidden p-3">
-                    <div class="ratio ratio-4x3"><img src="{% static 'image/gallery/render-4.jpg' %}" alt="Construction Progress" class="object-fit-cover rounded-3"></div>
-                    <div class="card-body pt-3 px-1 pb-0"><h2 class="h5 fw-bold mb-0">Construction Progress</h2></div>
-                </article>
-            </div>
-
-            <div class="col-md-4" data-category="exterior">
-                <article class="card h-100 border shadow-sm rounded-4 overflow-hidden p-3">
-                    <div class="ratio ratio-4x3"><img src="{% static 'image/hero-home.jpg' %}" alt="Landscape and Green Areas" class="object-fit-cover rounded-3"></div>
-                    <div class="card-body pt-3 px-1 pb-0"><h2 class="h5 fw-bold mb-0">Landscape &amp; Green Areas</h2></div>
-                </article>
-            </div>
-
-            <div class="col-md-4" data-category="interior">
-                <article class="card h-100 border shadow-sm rounded-4 overflow-hidden p-3">
-                    <div class="ratio ratio-4x3"><img src="{% static 'image/villas/type-a.png' %}" alt="Details" class="object-fit-cover rounded-3"></div>
-                    <div class="card-body pt-3 px-1 pb-0"><h2 class="h5 fw-bold mb-0">Details</h2></div>
-                </article>
-            </div>
-
-        </div>
-    </div>
-</section>
+</dialog>
 
 {% endblock %}

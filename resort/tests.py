@@ -15,6 +15,19 @@ class PublicPagesTests(TestCase):
         response = self.client.get('/villas/999/')
         self.assertEqual(response.status_code, 404)
 
+    def test_gallery_has_accessible_filters_lightbox_and_lazy_thumbnails(self):
+        response = self.client.get('/gallery/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'id="gallery-lightbox"')
+        self.assertContains(response, 'aria-pressed="true"')
+        self.assertContains(response, 'data-filter="exterior"')
+        self.assertContains(response, 'data-filter="interior"')
+        self.assertContains(response, 'data-filter="amenities"')
+        self.assertContains(response, 'loading="lazy"')
+        self.assertContains(response, 'decoding="async"')
+        self.assertEqual(response.content.count(b'data-gallery-item'), 14)
+
     def test_villa_pages_do_not_render_missing_floor_plan_urls(self):
         for villa_id in (1, 2, 3, 4):
             with self.subTest(villa_id=villa_id):
