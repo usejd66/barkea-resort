@@ -21,19 +21,23 @@
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="fullname" class="form-label fw-semibold small">Full Name *</label>
-                            <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Your name" required>
+                            {{ form.fullname }}
+                            {{ form.fullname.errors }}
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label fw-semibold small">Email *</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com" required>
+                            {{ form.email }}
+                            {{ form.email.errors }}
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label fw-semibold small">Phone *</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="+355 6X XXX XXX" required>
+                            {{ form.phone }}
+                            {{ form.phone.errors }}
                         </div>
                         <div class="mb-4">
                             <label for="message" class="form-label fw-semibold small">Message *</label>
-                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Your message..." required></textarea>
+                            {{ form.message }}
+                            {{ form.message.errors }}
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg w-100 fw-semibold">Send Message <i class="bi bi-arrow-right"></i></button>
                     </form>
@@ -87,7 +91,7 @@
 <section class="pb-5 bg-white">
     <div class="container">
         <div class="position-relative text-white text-center rounded-4 overflow-hidden">
-            <img src="{% static 'images/hero-bg.jpg' %}" alt="" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+            <img src="{% static 'image/hero-home.jpg' %}" alt="" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
             <div class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-50"></div>
             <div class="position-relative py-5 px-3">
                 <div class="py-4">

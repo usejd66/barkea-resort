@@ -1,25 +1,30 @@
-# Barkea Resort - Project Setup
+# Barkea Resort
 
-Kjo eshte struktura fillestare e website-it per kompleksin rezidencial Barkea Resort. Projekti eshte ndertuar me HTML, CSS, JavaScript dhe Bootstrap, dhe eshte i organizuar ne menyre te tille qe te integrohet lehtesisht me framework-un Django.
+Website-i i Barkea Resort është ndërtuar me Django, HTML, CSS, JavaScript dhe Bootstrap.
 
-## Struktura e Skedareve
+## Nisja lokale
 
-- templates/: Permban te gjitha faqet HTML (perfshire base.html per ribashkimin e struktures).
-- static/css/: Permban skedaret custom CSS per stilimin e faqes.
-- static/js/: Permban script-et JavaScript.
-- static/images/: Permban logot, fotot dhe renderat 3D.
+Kërkohet Python dhe pip. Krijo një mjedis virtual dhe instalo varësitë:
 
-## Teknologjite e Perdorura
+```sh
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+```
 
-- HTML5 & CSS3
-- Bootstrap 5 (per dizajnin responsive)
-- JavaScript (ES6)
-- Pergatitur per Django Framework
+Në Windows aktivizo mjedisin me `.venv\Scripts\activate`. Për zhvillim lokal, vendos `DJANGO_DEBUG=True`, pastaj ekzekuto:
 
-## Naming Conventions
+```sh
+python manage.py migrate
+python manage.py runserver
+```
 
-- Skedaret HTML dhe Imazhet: Emertohen me shkronja te vogla dhe fjalet ndahen me vize ne mes (p.sh. villa-detail.html, hero-bg.jpg).
+Pa `DJANGO_DEBUG=True`, aplikacioni kërkon `DJANGO_SECRET_KEY`. Në prodhim vendos gjithashtu `DJANGO_ALLOWED_HOSTS` si listë hostesh të ndara me presje dhe, kur nevojitet, `DJANGO_CSRF_TRUSTED_ORIGINS` si listë origjinash HTTPS të ndara me presje. Mos përdor vlerën e zhvillimit në prodhim. Pasi hosti të jetë konfiguruar për HTTPS, aktivizo `DJANGO_SECURE_SSL_REDIRECT=True` dhe vendos `DJANGO_HSTS_SECONDS` sipas politikës së hostit.
 
-- Skedaret CSS dhe JS: Emertohen thjesht me shkronja te vogla (p.sh. style.css, responsive.css, main.js).
+Mesazhet e kontaktit ruhen në databazë dhe mund të shihen nga admin-i i Django-s. Njoftimi me email është opsional: vendos `CONTACT_NOTIFICATION_EMAIL`, `DJANGO_EMAIL_HOST`, `DJANGO_EMAIL_USER`, `DJANGO_EMAIL_PASSWORD` dhe `DJANGO_DEFAULT_FROM_EMAIL` në mjedisin e hostit; asnjë kredencial nuk duhet ruajtur në Git. Databaza lokale `db.sqlite3` nuk duhet përdorur për të dhëna prodhimi.
 
-- Nuk perdoren hapesira (spaces) ose shkronja te medha ne emrat e skedareve.
+## Testet
+
+```sh
+python manage.py test
+```

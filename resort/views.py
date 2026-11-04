@@ -1,9 +1,16 @@
+import logging
+from smtplib import SMTPException
+
 from django.contrib import messages
+from django.conf import settings
 from django.contrib.staticfiles import finders
+from django.core.mail import send_mail
 from django.http import Http404
 from django.shortcuts import redirect, render
 
-from .models import ContactMessage
+from .forms import ContactMessageForm
+
+logger = logging.getLogger(__name__)
 
 # Karakteristikat e përbashkëta (mund t'i ndryshosh për secilën vilë)
 COMMON_FEATURES = [
@@ -29,7 +36,7 @@ VILLAS = [
         'rooms': '4+1', 'area': 220, 'bedrooms': 4, 'bathrooms': 3, 'floors': 2, 'plot': 500,
         'description': 'A spacious family villa with generous living areas and a large veranda overlooking the garden.',
         'image': 'image/villas/type-b.png',
-        'plan_ground': 'image/plan-ground.jpg', 'plan_first': 'image/plan-first.jpg', 'plan_second': '',
+        'plan_ground': 'image/plan-ground.png', 'plan_first': 'image/plan-first.png', 'plan_second': '',
         'gallery': [], 'features': COMMON_FEATURES,
     },
     {
@@ -37,7 +44,7 @@ VILLAS = [
         'rooms': '5+1', 'area': 280, 'bedrooms': 5, 'bathrooms': 4, 'floors': 3, 'plot': 600,
         'description': 'A three-floor villa with five bedrooms, designed for larger families who value space and privacy.',
         'image': 'image/villas/type-c.jpg',
-        'plan_ground': 'image/plan-ground.jpg', 'plan_first': 'image/plan-first.jpg', 'plan_second': 'image/plan-first.jpg',
+        'plan_ground': 'image/plan-ground.png', 'plan_first': 'image/plan-first.png', 'plan_second': '',
         'gallery': [], 'features': COMMON_FEATURES,
     },
     {
@@ -45,7 +52,7 @@ VILLAS = [
         'rooms': '6+1', 'area': 320, 'bedrooms': 6, 'bathrooms': 5, 'floors': 3, 'plot': 700,
         'description': 'Our largest villa: six bedrooms over three floors, with premium finishes and a large private plot.',
         'image': 'image/villas/type-d.jpg',
-        'plan_ground': 'image/plan-ground.jpg', 'plan_first': 'image/plan-first.jpg', 'plan_second': 'image/plan-first.jpg',
+        'plan_ground': 'image/plan-ground.png', 'plan_first': 'image/plan-first.png', 'plan_second': '',
         'gallery': [], 'features': COMMON_FEATURES,
     },
 ]
@@ -131,12 +138,41 @@ def location_view(request):
 
 def contact_view(request):
     if request.method == 'POST':
-        ContactMessage.objects.create(
-            fullname=request.POST.get('fullname', '').strip(),
-            email=request.POST.get('email', '').strip(),
-            phone=request.POST.get('phone', '').strip(),
-            message=request.POST.get('message', '').strip(),
-        )
-        messages.success(request, 'Thank you! Your message has been sent.')
-        return redirect('contact')
-    return render(request, 'contact.html')
+        form = ContactMessageForm(request.POST)
+        if form.is_valid():
+            contact_message = form.save()
+            if settings.CONTACT_NOTIFICATION_EMAIL:
+                try:
+                    sent = send_mail(
+                        subject='New Barkea Resort contact request',
+                        message=(
+                            f'Name: {contact_message.fullname}\n'
+                            f'Email: {contact_message.email}\n'
+                            f'Phone: {contact_message.phone}\n\n'
+                            f'{contact_message.message}'
+                        ),
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[settings.CONTACT_NOTIFICATION_EMAIL],
+                        fail_silently=False,
+                    )
+                except (OSError, SMTPException):
+                    logger.exception('Could not send contact notification email.')
+                    messages.warning(
+                        request,
+                        'Your message was saved, but we could not send an email notification.',
+                    )
+                else:
+                    if sent:
+                        messages.success(request, 'Thank you! Your message has been received.')
+                    else:
+                        logger.error('Contact notification email was not accepted by the email backend.')
+                        messages.warning(
+                            request,
+                            'Your message was saved, but we could not send an email notification.',
+                        )
+            else:
+                messages.success(request, 'Thank you! Your message has been received.')
+            return redirect('contact')
+    else:
+        form = ContactMessageForm()
+    return render(request, 'contact.html', {'form': form})
