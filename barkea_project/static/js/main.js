@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (filterBox) {
         const buttons = filterBox.querySelectorAll('[data-filter]');
         const items = document.querySelectorAll('[data-category]');
+        const carouselSection = document.getElementById('gallery-carousel-section');
 
         buttons.forEach(function (btn) {
             btn.addEventListener('click', function () {
@@ -42,10 +43,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 buttons.forEach(function (b) {
                     b.classList.toggle('btn-primary', b === btn);
                     b.classList.toggle('btn-outline-secondary', b !== btn);
+                    b.setAttribute('aria-pressed', String(b === btn));
                 });
                 items.forEach(function (item) {
                     item.classList.toggle('d-none', f !== 'all' && item.dataset.category !== f);
                 });
+                if (carouselSection) {
+                    carouselSection.classList.toggle('d-none', f !== 'all');
+                }
             });
         });
     }

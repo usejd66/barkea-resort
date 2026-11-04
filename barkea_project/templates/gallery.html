@@ -12,16 +12,16 @@
 <section class="pt-4 bg-white">
     <div class="container">
         <div class="d-flex flex-wrap gap-2" id="gallery-filters">
-            <button type="button" class="btn btn-primary px-4 fw-semibold" data-filter="all">All</button>
-            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="interior">Interior</button>
-            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="exterior">Exterior</button>
-            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="renders">Renders</button>
-            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="construction">Construction Progress</button>
+            <button type="button" class="btn btn-primary px-4 fw-semibold" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="interior" aria-pressed="false">Interior</button>
+            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="exterior" aria-pressed="false">Exterior</button>
+            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="renders" aria-pressed="false">Renders</button>
+            <button type="button" class="btn btn-outline-secondary px-4 fw-semibold" data-filter="construction" aria-pressed="false">Construction Progress</button>
         </div>
     </div>
 </section>
 <!-- Carousel -->
-<section class="py-4 bg-white">
+<section id="gallery-carousel-section" class="py-4 bg-white">
     <div class="container">
         <div id="galleryCarousel" class="carousel slide rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
 

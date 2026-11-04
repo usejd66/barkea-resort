@@ -2,7 +2,7 @@
     --barkea-navy: #0f172a;   /* Blu e natës shumë e thellë (Zëvendëson jeshilen e errët) */
     --barkea-blue: #1e40af;   /* Blu mbretërore elektrike dhe e gjallë */
     --barkea-soft: #f8fafc;   /* E bardhë e pastër akulli */
-    --barkea-gold: #d97706;   /* Ngjyrë Kamel/Amber e ngrohtë për butonat */
+    --barkea-gold: #9a4f00;
 
     /* Përditësimi për Bootstrap */
     --bs-primary: #1e40af;
@@ -147,5 +147,4 @@ footer a:hover {
         min-height: 64px;
     }
 }
-
 
