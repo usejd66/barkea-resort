@@ -1,4 +1,7 @@
+import unicodedata
+
 from django import forms
+from django.core.exceptions import ValidationError
 
 from .models import ContactMessage
 
@@ -38,3 +41,25 @@ class ContactMessageForm(forms.ModelForm):
                 'aria-describedby': 'phone-feedback phone-server-errors',
             }),
         }
+
+    def clean_fullname(self):
+        fullname = self.cleaned_data['fullname']
+        allowed_punctuation = {" ", "-", "'", "’", "."}
+        if len(fullname) < 2:
+            raise ValidationError(
+                'Enter at least 2 characters for your name.',
+                code='min_length',
+            )
+        if not any(character.isalpha() for character in fullname) or any(
+            not (
+                character.isalpha()
+                or unicodedata.category(character).startswith('M')
+                or character in allowed_punctuation
+            )
+            for character in fullname
+        ):
+            raise ValidationError(
+                'Use letters only; spaces, hyphens, apostrophes and periods are allowed.',
+                code='invalid_name',
+            )
+        return fullname

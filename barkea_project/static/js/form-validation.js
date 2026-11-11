@@ -29,6 +29,9 @@ function initContactFormValidation() {
         if (field.id === 'id_fullname' && value.length < 2) {
             return 'Enter at least 2 characters for your name.';
         }
+        if (field.id === 'id_fullname' && !/^\p{L}[\p{L}\p{M}]*(?:[\s.'’-]\p{L}[\p{L}\p{M}.]*)*$/u.test(value)) {
+            return 'Use letters only; spaces, hyphens, apostrophes and periods are allowed.';
+        }
         if (field.id === 'id_email' && field.validity.typeMismatch) {
             return 'Enter a valid email address.';
         }

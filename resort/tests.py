@@ -73,6 +73,29 @@ class ContactMessageTests(TestCase):
         self.assertEqual(ContactMessage.objects.count(), 1)
         self.assertEqual(ContactMessage.objects.get().email, 'visitor@example.com')
 
+    def test_contact_name_with_numbers_is_rejected_by_server(self):
+        response = self.client.post('/contact/', {
+            'fullname': 'Test Visitor 123',
+            'email': 'visitor@example.com',
+            'phone': '+355 69 123 4567',
+            'message': 'I would like to schedule a visit.',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['form'].has_error('fullname', 'invalid_name'))
+        self.assertEqual(ContactMessage.objects.count(), 0)
+
+    def test_contact_name_accepts_accented_and_hyphenated_names(self):
+        response = self.client.post('/contact/', {
+            'fullname': 'Élodie Martin-Smith',
+            'email': 'visitor@example.com',
+            'phone': '+355 69 123 4567',
+            'message': 'I would like to schedule a visit.',
+        })
+
+        self.assertRedirects(response, '/contact/')
+        self.assertEqual(ContactMessage.objects.get().fullname, 'Élodie Martin-Smith')
+
     def test_short_contact_message_is_rejected_by_server(self):
         response = self.client.post('/contact/', {
             'fullname': 'Test Visitor',
