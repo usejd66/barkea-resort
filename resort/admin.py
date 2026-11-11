@@ -33,6 +33,7 @@ class VillaAdmin(admin.ModelAdmin):
     filter_horizontal = ('features',)
     inlines = (GalleryImageInline,)
     list_select_related = ('villa_type',)
+    readonly_fields = ('static_image', 'static_plan_ground', 'static_plan_first', 'static_plan_second')
 
 
 @admin.register(GalleryImage)
@@ -43,6 +44,7 @@ class GalleryImageAdmin(admin.ModelAdmin):
     search_fields = ('caption', 'alt_text', 'villa__name')
     list_select_related = ('villa',)
     date_hierarchy = 'created_at'
+    readonly_fields = ('static_image',)
 
 
 @admin.register(ContactRequest)

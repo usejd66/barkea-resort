@@ -1,5 +1,6 @@
 from django.core import mail
 from django.contrib.auth import get_user_model
+from django.contrib.staticfiles import finders
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
@@ -170,9 +171,21 @@ class ContactRequestTests(TestCase):
 
 
 class ResortContentTests(TestCase):
+    def test_existing_villas_features_and_gallery_are_preloaded(self):
+        self.assertEqual(Villa.objects.count(), 4)
+        self.assertEqual(VillaType.objects.count(), 4)
+        self.assertEqual(Feature.objects.count(), 6)
+        self.assertEqual(GalleryImage.objects.count(), 14)
+        self.assertEqual(Villa.objects.filter(is_published=True).count(), 4)
+        first_villa = Villa.objects.get(slug='vile-ne-shitje-tirane')
+        self.assertEqual(first_villa.features.count(), 6)
+        self.assertEqual(first_villa.static_image, 'image/villas/type-a.png')
+        self.assertTrue(finders.find(first_villa.static_image))
+        self.assertTrue(all(finders.find(image.static_image) for image in GalleryImage.objects.all()))
+
     def test_villa_features_and_gallery_images_are_linked(self):
-        villa_type = VillaType.objects.create(name='Type A')
-        feature = Feature.objects.create(name='Private parking')
+        villa_type = VillaType.objects.create(name='Test Type')
+        feature = Feature.objects.create(name='Test Feature')
         villa = Villa.objects.create(
             name='Garden Villa',
             villa_type=villa_type,

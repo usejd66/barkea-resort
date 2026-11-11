@@ -112,6 +112,14 @@ def _published_villas():
     ).select_related('villa_type').prefetch_related('features', 'gallery_images')
 
 
+def _asset_url(uploaded_image, static_image):
+    if uploaded_image:
+        return uploaded_image.url
+    if static_image:
+        return staticfiles_storage.url(static_image)
+    return ''
+
+
 def _database_villa_data(villa):
     return {
         'id': villa.pk,
@@ -124,15 +132,18 @@ def _database_villa_data(villa):
         'floors': villa.floors,
         'plot': villa.plot,
         'description': villa.description,
-        'image_url': villa.image.url,
-        'plan_ground': bool(villa.plan_ground),
-        'plan_ground_url': villa.plan_ground.url if villa.plan_ground else '',
-        'plan_first': bool(villa.plan_first),
-        'plan_first_url': villa.plan_first.url if villa.plan_first else '',
-        'plan_second': bool(villa.plan_second),
-        'plan_second_url': villa.plan_second.url if villa.plan_second else '',
+        'image_url': _asset_url(villa.image, villa.static_image),
+        'plan_ground': bool(villa.plan_ground or villa.static_plan_ground),
+        'plan_ground_url': _asset_url(villa.plan_ground, villa.static_plan_ground),
+        'plan_first': bool(villa.plan_first or villa.static_plan_first),
+        'plan_first_url': _asset_url(villa.plan_first, villa.static_plan_first),
+        'plan_second': bool(villa.plan_second or villa.static_plan_second),
+        'plan_second_url': _asset_url(villa.plan_second, villa.static_plan_second),
         'gallery': [
-            {'src': image.image.url, 'label': image.caption}
+            {
+                'src': _asset_url(image.image, image.static_image),
+                'label': image.caption,
+            }
             for image in villa.gallery_images.all()
             if image.is_published
         ],
@@ -207,7 +218,16 @@ def villa_detail_view(request, pk):
 
 def gallery_view(request):
     images = GalleryImage.objects.filter(is_published=True).select_related('villa')
-    return render(request, 'gallery.html', {'gallery_images': images})
+    gallery_images = [
+        {
+            'image_url': _asset_url(image.image, image.static_image),
+            'alt_text': image.alt_text,
+            'caption': image.caption or image.alt_text,
+            'category': image.category,
+        }
+        for image in images
+    ]
+    return render(request, 'gallery.html', {'gallery_images': gallery_images})
 
 
 def location_view(request):
