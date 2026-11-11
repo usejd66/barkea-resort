@@ -135,20 +135,12 @@ textarea.form-control {
 }
 
 .contact-form-summary {
-    position: fixed;
-    top: 5.5rem;
-    left: 50%;
-    z-index: 1090;
-    width: min(38rem, calc(100vw - 2rem));
-    max-width: calc(100vw - 2rem);
-    margin: 0;
-    transform: translateX(-50%);
     border: 1px solid #ead6d7;
     border-inline-start: 4px solid #a63e47;
     border-radius: 0.75rem;
-    background: #fff;
+    background: #fffafa;
     color: #49363a;
-    box-shadow: 0 0.75rem 2rem rgba(15, 23, 42, 0.16);
+    box-shadow: 0 0.25rem 0.75rem rgba(15, 23, 42, 0.08);
 }
 
 .contact-form-summary[hidden] {
@@ -164,6 +156,7 @@ textarea.form-control {
 .contact-form-summary-title {
     color: #263544;
     font-weight: 600;
+    line-height: 1.4;
 }
 
 .contact-form-summary a {
@@ -177,12 +170,14 @@ textarea.form-control {
     text-underline-offset: 0.15em;
 }
 
-@media (max-width: 575.98px) {
-    .contact-form-summary {
-        top: 5rem;
-        width: calc(100vw - 1.5rem);
-        max-width: calc(100vw - 1.5rem);
-    }
+.contact-form-error-list {
+    padding-left: 1.1rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.contact-form-error-list li + li {
+    margin-top: 0.2rem;
 }
 
 .site-toast-container {

@@ -70,12 +70,25 @@ function initContactFormValidation() {
         return !message && field.validity.valid;
     }
 
-    function getFieldError(field) {
-        const clientError = getError(field);
-        if (clientError) return clientError;
+    function getSummaryError(field) {
+        const value = field.value.trim();
+        const error = getError(field);
+        if (!error) {
+            const serverErrors = document.getElementById(`${field.name}-server-errors`);
+            return serverErrors ? serverErrors.textContent.trim() : '';
+        }
 
-        const serverErrors = document.getElementById(`${field.name}-server-errors`);
-        return serverErrors ? serverErrors.textContent.trim() : '';
+        if (field.id === 'id_fullname') {
+            return value.length < 2 ? 'Enter at least 2 characters.' : 'Use letters only.';
+        }
+        if (field.id === 'id_email') return 'Enter a valid email address.';
+        if (field.id === 'id_phone') return 'Enter a phone number with 7-15 digits.';
+        if (field.id === 'id_message') {
+            if (!value) return 'Enter a message.';
+            if (value.length < 10) return 'Add at least 10 characters.';
+            return 'Keep it under 5,000 characters.';
+        }
+        return error;
     }
 
     function updateSummary(announce) {
@@ -86,15 +99,15 @@ function initContactFormValidation() {
         });
         if (summaryTitle) {
             summaryTitle.textContent = invalidFields.length === 1
-                ? "Your message wasn't sent. Please correct this field and try again:"
-                : `Your message wasn't sent. Please correct these ${invalidFields.length} fields and try again:`;
+                ? "We couldn't send your request. Please check this field:"
+                : "We couldn't send your request. Please check:";
         }
         summaryList.replaceChildren();
         invalidFields.forEach(function (field) {
             const item = document.createElement('li');
             const link = document.createElement('a');
             link.href = `#${field.id}`;
-            link.textContent = `${fieldLabels[field.name]} — ${getFieldError(field)}`;
+            link.textContent = `${fieldLabels[field.name]} — ${getSummaryError(field)}`;
             item.appendChild(link);
             summaryList.appendChild(item);
         });

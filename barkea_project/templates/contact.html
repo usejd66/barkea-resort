@@ -15,16 +15,17 @@
             <!-- Form -->
             <div class="col-lg-7">
                 <div class="p-4 p-md-5 rounded-4 border shadow-sm bg-white">
-                    <h2 class="fw-bold h3 mb-4">Information Request</h2>
+                    <h2 class="fw-bold h3 mb-2">Request Information or a Visit</h2>
+                    <p class="text-secondary mb-4">Tell us what you are looking for, and our team will help with the next steps.</p>
 
                     <form id="contact-form" action="{% url 'contact' %}" method="post">
                         {% csrf_token %}
-                        <div id="contact-form-feedback" class="toast contact-form-summary" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="8000" hidden>
+                        <div id="contact-form-feedback" class="toast contact-form-summary w-100" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="8000" hidden>
                             <div class="d-flex align-items-start">
                                 <i class="bi bi-exclamation-circle-fill contact-form-summary-icon" aria-hidden="true"></i>
                                 <div class="toast-body">
-                                    <p id="contact-form-summary-title" class="contact-form-summary-title mb-2">Your message wasn't sent. Please correct these fields and try again:</p>
-                                    <ul id="contact-form-error-list" class="mb-0"></ul>
+                                    <p id="contact-form-summary-title" class="contact-form-summary-title mb-2">We couldn't send your request. Please check:</p>
+                                    <ul id="contact-form-error-list" class="contact-form-error-list mb-0"></ul>
                                 </div>
                                 <button type="button" class="btn-close mt-3 me-3" data-bs-dismiss="toast" aria-label="Dismiss validation message"></button>
                             </div>

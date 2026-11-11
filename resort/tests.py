@@ -42,10 +42,11 @@ class ContactMessageTests(TestCase):
         html = response.content.decode()
 
         self.assertContains(response, 'id="contact-form"')
-        self.assertContains(response, 'class="toast contact-form-summary"')
+        self.assertContains(response, 'class="toast contact-form-summary w-100"')
         self.assertContains(response, 'id="contact-form-error-list"')
         self.assertContains(response, 'data-bs-autohide="true"')
         self.assertContains(response, 'data-bs-delay="8000"')
+        self.assertContains(response, "We couldn't send your request. Please check:")
         self.assertContains(response, 'src="/static/js/form-validation.js"')
         self.assertContains(response, 'href="#id_fullname"')
         self.assertContains(response, 'minlength="10"')
