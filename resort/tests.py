@@ -37,6 +37,27 @@ class PublicPagesTests(TestCase):
 
 
 class ContactMessageTests(TestCase):
+    def test_contact_form_loads_client_validation_and_accessible_required_fields(self):
+        response = self.client.get('/contact/')
+        html = response.content.decode()
+
+        self.assertContains(response, 'id="contact-form"')
+        self.assertContains(response, 'src="/static/js/form-validation.js"')
+        self.assertContains(response, 'href="#id_fullname"')
+        for field in ('fullname', 'email', 'phone', 'message'):
+            with self.subTest(field=field):
+                self.assertRegex(
+                    html,
+                    rf'<(?:input|textarea)\b(?=[^>]*id="id_{field}")(?=[^>]*\brequired\b)[^>]*>',
+                )
+                self.assertContains(response, f'id="{field}-feedback"')
+                self.assertContains(response, f'aria-describedby="{field}-feedback {field}-server-errors"')
+
+    def test_contact_form_validation_script_is_loaded_only_on_contact_page(self):
+        response = self.client.get('/')
+
+        self.assertNotContains(response, 'form-validation.js')
+
     def test_valid_contact_submission_is_saved(self):
         response = self.client.post('/contact/', {
             'fullname': 'Test Visitor',
