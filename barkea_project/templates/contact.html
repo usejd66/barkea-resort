@@ -19,8 +19,9 @@
 
                     <form id="contact-form" action="{% url 'contact' %}" method="post">
                         {% csrf_token %}
-                        <div id="contact-form-feedback" class="alert alert-danger" role="alert" aria-live="assertive" hidden>
-                            Please correct the highlighted fields before sending your message.
+                        <div id="contact-form-feedback" class="contact-form-summary mb-4" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1" hidden>
+                            <p id="contact-form-summary-title" class="contact-form-summary-title mb-2"></p>
+                            <ul id="contact-form-error-list" class="mb-0"></ul>
                         </div>
                         <div class="mb-3">
                             <label for="id_fullname" class="form-label fw-semibold small">Full Name *</label>
