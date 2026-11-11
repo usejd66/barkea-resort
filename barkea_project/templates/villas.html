@@ -34,10 +34,9 @@
             <div class="col-6 col-md-3">
                 <select class="form-select" id="filter-type" aria-label="Filter by Typology">
                     <option value="" selected>All Typologies</option>
-                    <option value="type-a">Type A</option>
-                    <option value="type-b">Type B</option>
-                    <option value="type-c">Type C</option>
-                    <option value="type-d">Type D</option>
+                    {% for villa_type in villa_types %}
+                    <option value="{{ villa_type.slug }}">{{ villa_type.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="col-6 col-md">
@@ -55,7 +54,7 @@
             <div class="col-md-6" data-villa data-area="{{ villa.area }}" data-floors="{{ villa.floors }}" data-type="{{ villa.type }}">
                 <article class="card h-100 border shadow-sm rounded-4 overflow-hidden p-3">
                     <div class="ratio ratio-16x9">
-                        <img src="{% static villa.image %}" alt="Villa {{ villa.name }}" class="object-fit-cover rounded-3">
+                        <img src="{{ villa.image_url }}" alt="Villa {{ villa.name }}" class="object-fit-cover rounded-3">
                     </div>
                     <div class="card-body pt-3 px-1 pb-0">
                         <h2 class="h4 fw-bold mb-1">{{ villa.name }}</h2>

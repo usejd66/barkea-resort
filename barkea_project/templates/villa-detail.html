@@ -13,7 +13,7 @@
             <div class="row align-items-center g-5">
                 <div class="col-lg-6">
                     <div class="ratio ratio-4x3 villa-detail-image">
-                        <img src="{% static villa.image %}" alt="{{ villa.name }}" class="object-fit-cover rounded-4 shadow-sm">
+                        <img src="{{ villa.image_url }}" alt="{{ villa.name }}" class="object-fit-cover rounded-4 shadow-sm">
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -72,6 +72,7 @@
         </section>
 
         <!-- Floor plans -->
+        {% if villa.plan_ground_url %}
         <section class="my-5 pt-3">
             <h2 class="fw-bold mb-4">Floor Plans</h2>
 
@@ -95,7 +96,7 @@
                 <div class="tab-pane fade show active" id="ground-pane" role="tabpanel" aria-labelledby="ground-tab" tabindex="0">
                     <div class="card border-0 bg-light p-3 rounded-4 text-center">
                         <div class="bg-white rounded-3 p-3 shadow-sm mb-3">
-                            <img src="{% static villa.plan_ground %}" alt="{{ villa.name }} Ground Floor Plan" class="img-fluid">
+                            <img src="{{ villa.plan_ground_url }}" alt="{{ villa.name }} Ground Floor Plan" class="img-fluid">
                         </div>
                         <span class="fw-semibold text-secondary">Ground Floor Plan</span>
                     </div>
@@ -104,7 +105,7 @@
                 <div class="tab-pane fade" id="first-pane" role="tabpanel" aria-labelledby="first-tab" tabindex="0">
                     <div class="card border-0 bg-light p-3 rounded-4 text-center">
                         <div class="bg-white rounded-3 p-3 shadow-sm mb-3">
-                            <img src="{% static villa.plan_first %}" alt="{{ villa.name }} First Floor Plan" class="img-fluid">
+                            <img src="{{ villa.plan_first_url }}" alt="{{ villa.name }} First Floor Plan" class="img-fluid">
                         </div>
                         <span class="fw-semibold text-secondary">First Floor Plan</span>
                     </div>
@@ -114,7 +115,7 @@
                 <div class="tab-pane fade" id="second-pane" role="tabpanel" aria-labelledby="second-tab" tabindex="0">
                     <div class="card border-0 bg-light p-3 rounded-4 text-center">
                         <div class="bg-white rounded-3 p-3 shadow-sm mb-3">
-                            <img src="{% static villa.plan_second %}" alt="{{ villa.name }} Second Floor Plan" class="img-fluid">
+                            <img src="{{ villa.plan_second_url }}" alt="{{ villa.name }} Second Floor Plan" class="img-fluid">
                         </div>
                         <span class="fw-semibold text-secondary">Second Floor Plan</span>
                     </div>
@@ -122,6 +123,7 @@
                 {% endif %}
             </div>
         </section>
+        {% endif %}
 
         <!-- Room layout -->
         <section class="my-5 pt-3">
@@ -155,11 +157,11 @@
             <h2 class="fw-bold mb-4">Gallery</h2>
             <div class="row g-3">
                 <div class="col-6 col-md-3">
-                    <div class="ratio ratio-1x1"><img src="{% static villa.image %}" alt="{{ villa.name }} exterior" class="object-fit-cover rounded-4 shadow-sm"></div>
+                    <div class="ratio ratio-1x1"><img src="{{ villa.image_url }}" alt="{{ villa.name }} exterior" class="object-fit-cover rounded-4 shadow-sm"></div>
                 </div>
                 {% for item in villa.gallery %}
                 <div class="col-6 col-md-3">
-                    <div class="ratio ratio-1x1"><img src="{% static item.src %}" alt="{{ villa.name }}{% if item.label %} - {{ item.label }}{% endif %}" class="object-fit-cover rounded-4 shadow-sm"></div>
+                    <div class="ratio ratio-1x1"><img src="{{ item.src }}" alt="{{ villa.name }}{% if item.label %} - {{ item.label }}{% endif %}" class="object-fit-cover rounded-4 shadow-sm"></div>
                     {% if item.label %}<div class="small text-muted text-center mt-1">{{ item.label }}</div>{% endif %}
                 </div>
                 {% endfor %}

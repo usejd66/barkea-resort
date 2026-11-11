@@ -235,6 +235,22 @@
                     </button>
                 </article>
             </div>
+            {% for image in gallery_images %}
+            <div class="col-6 col-lg-4" data-gallery-item data-category="{{ image.category }}">
+                <article class="gallery-card h-100">
+                    <button class="gallery-card-button" type="button" data-gallery-open
+                            data-gallery-full="{{ image.image.url }}"
+                            data-gallery-alt="{{ image.alt_text }}"
+                            data-gallery-caption="{{ image.caption|default:image.alt_text }}"
+                            aria-label="View photo: {{ image.caption|default:image.alt_text }}">
+                        <span class="ratio ratio-4x3 gallery-image-frame">
+                            <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" width="1200" height="900" loading="lazy" decoding="async">
+                        </span>
+                        <span class="gallery-card-caption">{{ image.caption|default:image.alt_text }}</span>
+                    </button>
+                </article>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>

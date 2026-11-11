@@ -49,7 +49,7 @@ class Villa(models.Model):
     floors = models.PositiveSmallIntegerField()
     plot = models.PositiveIntegerField(help_text='Plot area in square metres.')
     description = models.TextField()
-    image = models.ImageField(upload_to='villas/', blank=True)
+    image = models.ImageField(upload_to='villas/')
     plan_ground = models.ImageField(upload_to='villa-plans/', blank=True)
     plan_first = models.ImageField(upload_to='villa-plans/', blank=True)
     plan_second = models.ImageField(upload_to='villa-plans/', blank=True)

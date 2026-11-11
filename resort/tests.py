@@ -183,6 +183,7 @@ class ResortContentTests(TestCase):
             floors=2,
             plot=400,
             description='A modern family villa.',
+            image='villas/garden-villa.jpg',
         )
         villa.features.add(feature)
         gallery_image = GalleryImage.objects.create(
@@ -197,6 +198,40 @@ class ResortContentTests(TestCase):
         self.assertEqual(villa.features.get(), feature)
         self.assertEqual(gallery_image.villa, villa)
         self.assertEqual(villa.gallery_images.get(), gallery_image)
+
+    def test_published_database_content_is_rendered_on_public_pages(self):
+        villa_type = VillaType.objects.create(name='Garden Type')
+        villa = Villa.objects.create(
+            name='Garden Villa',
+            villa_type=villa_type,
+            rooms='3+1',
+            area=180,
+            bedrooms=3,
+            bathrooms=3,
+            floors=2,
+            plot=400,
+            description='A modern family villa.',
+            image='villas/garden-villa.jpg',
+            is_published=True,
+        )
+        gallery_image = GalleryImage.objects.create(
+            villa=villa,
+            image='gallery/garden-villa.jpg',
+            alt_text='Garden Villa exterior',
+            category=GalleryImage.Category.EXTERIOR,
+        )
+
+        home_response = self.client.get('/')
+        villas_response = self.client.get('/villas/')
+        detail_response = self.client.get(f'/villas/{villa.pk}/')
+        gallery_response = self.client.get('/gallery/')
+
+        self.assertContains(home_response, 'Garden Villa')
+        self.assertContains(villas_response, 'value="garden-type">Garden Type')
+        self.assertContains(detail_response, '/media/villas/garden-villa.jpg')
+        self.assertContains(detail_response, '/media/gallery/garden-villa.jpg')
+        self.assertContains(gallery_response, f'data-gallery-full="{gallery_image.image.url}"')
+        self.assertEqual(gallery_response.content.count(b'data-gallery-item'), 15)
 
     def test_content_and_contact_models_are_available_in_admin(self):
         user_model = get_user_model()

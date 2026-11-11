@@ -4,11 +4,13 @@ from smtplib import SMTPException
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.staticfiles import finders
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import send_mail
 from django.http import Http404
 from django.shortcuts import redirect, render
 
 from .forms import ContactRequestForm
+from .models import GalleryImage, Villa, VillaType
 
 logger = logging.getLogger(__name__)
 
@@ -103,8 +105,61 @@ def build_gallery(villa_type, max_extra=8):
     return items
 
 
+def _published_villas():
+    return Villa.objects.filter(
+        is_published=True,
+        villa_type__is_active=True,
+    ).select_related('villa_type').prefetch_related('features', 'gallery_images')
+
+
+def _database_villa_data(villa):
+    return {
+        'id': villa.pk,
+        'type': villa.villa_type.slug,
+        'name': villa.name,
+        'rooms': villa.rooms,
+        'area': villa.area,
+        'bedrooms': villa.bedrooms,
+        'bathrooms': villa.bathrooms,
+        'floors': villa.floors,
+        'plot': villa.plot,
+        'description': villa.description,
+        'image_url': villa.image.url,
+        'plan_ground': bool(villa.plan_ground),
+        'plan_ground_url': villa.plan_ground.url if villa.plan_ground else '',
+        'plan_first': bool(villa.plan_first),
+        'plan_first_url': villa.plan_first.url if villa.plan_first else '',
+        'plan_second': bool(villa.plan_second),
+        'plan_second_url': villa.plan_second.url if villa.plan_second else '',
+        'gallery': [
+            {'src': image.image.url, 'label': image.caption}
+            for image in villa.gallery_images.all()
+            if image.is_published
+        ],
+        'features': [
+            {'icon': feature.icon, 'text': feature.name}
+            for feature in villa.features.all()
+        ],
+    }
+
+
+def _static_villa_data(villa):
+    data = {**villa}
+    data['image_url'] = staticfiles_storage.url(villa['image'])
+    for floor in ('ground', 'first', 'second'):
+        path = villa[f'plan_{floor}']
+        data[f'plan_{floor}_url'] = staticfiles_storage.url(path) if path else ''
+    return data
+
+
+def _public_villas():
+    if Villa.objects.exists():
+        return [_database_villa_data(villa) for villa in _published_villas()]
+    return [_static_villa_data(villa) for villa in VILLAS]
+
+
 def index_view(request):
-    return render(request, 'home.html', {'villas': VILLAS[:3]})
+    return render(request, 'home.html', {'villas': _public_villas()[:3]})
 
 
 def about_view(request):
@@ -112,24 +167,47 @@ def about_view(request):
 
 
 def villas_view(request):
-    return render(request, 'villas.html', {'villas': VILLAS})
+    villas = _public_villas()
+    if Villa.objects.exists():
+        villa_types = VillaType.objects.filter(
+            is_active=True,
+            villas__is_published=True,
+        ).distinct()
+    else:
+        villa_types = [
+            {'slug': villa['type'], 'name': villa['type'].replace('type-', 'Type ').title()}
+            for villa in VILLAS
+        ]
+    return render(request, 'villas.html', {'villas': villas, 'villa_types': villa_types})
 
 
 def villa_detail_view(request, pk):
-    villa = next((v for v in VILLAS if v['id'] == pk), None)
+    if Villa.objects.exists():
+        try:
+            villa = _published_villas().get(pk=pk)
+        except Villa.DoesNotExist as error:
+            raise Http404("Villa not found") from error
+        return render(request, 'villa-detail.html', {'villa': _database_villa_data(villa)})
+
+    villa = next((item for item in VILLAS if item['id'] == pk), None)
     if villa is None:
-        raise Http404("Villa not found")
+        raise Http404('Villa not found')
     # Nëse galeria nuk është shkruar me dorë, merret automatikisht nga skedarët
     if villa['gallery']:
         gallery = [g if isinstance(g, dict) else {'src': g, 'label': ''} for g in villa['gallery']]
     else:
         gallery = build_gallery(villa['type'])
-    villa = {**villa, 'gallery': gallery}
+    villa = _static_villa_data({**villa, 'gallery': gallery})
+    villa['gallery'] = [
+        {**item, 'src': staticfiles_storage.url(item['src'])}
+        for item in gallery
+    ]
     return render(request, 'villa-detail.html', {'villa': villa})
 
 
 def gallery_view(request):
-    return render(request, 'gallery.html')
+    images = GalleryImage.objects.filter(is_published=True).select_related('villa')
+    return render(request, 'gallery.html', {'gallery_images': images})
 
 
 def location_view(request):
