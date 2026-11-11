@@ -163,9 +163,69 @@ textarea.form-control {
     text-underline-offset: 0.15em;
 }
 
+.site-toast-container {
+    position: fixed;
+    top: 5.5rem;
+    right: 1rem;
+    z-index: 1090;
+    width: min(26rem, calc(100vw - 2rem));
+}
+
+.site-toast {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 0 0.75rem 2rem rgba(15, 23, 42, 0.16);
+}
+
+.site-toast-success {
+    border-inline-start: 4px solid #198754;
+}
+
+.site-toast-warning {
+    border-inline-start: 4px solid #b7791f;
+}
+
+.site-toast-error {
+    border-inline-start: 4px solid #a63e47;
+}
+
+.site-toast-info {
+    border-inline-start: 4px solid var(--barkea-blue);
+}
+
+.site-toast-icon {
+    flex: 0 0 auto;
+}
+
+.site-toast-success .site-toast-icon {
+    color: #198754;
+}
+
+.site-toast-warning .site-toast-icon {
+    color: #946200;
+}
+
+.site-toast-error .site-toast-icon {
+    color: #a63e47;
+}
+
+.site-toast-info .site-toast-icon {
+    color: var(--barkea-blue);
+}
+
 /* Gallery */
 #gallery-filters .btn {
     border-radius: 0.6rem;
+}
+
+@media (max-width: 575.98px) {
+    .site-toast-container {
+        top: 5rem;
+        right: 0.75rem;
+        width: calc(100vw - 1.5rem);
+    }
 }
 
 /* Images */

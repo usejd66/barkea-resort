@@ -46,6 +46,7 @@ class ContactMessageTests(TestCase):
         self.assertContains(response, 'id="contact-form-error-list"')
         self.assertContains(response, 'src="/static/js/form-validation.js"')
         self.assertContains(response, 'href="#id_fullname"')
+        self.assertContains(response, 'minlength="10"')
         for field in ('fullname', 'email', 'phone', 'message'):
             with self.subTest(field=field):
                 self.assertRegex(
@@ -71,6 +72,31 @@ class ContactMessageTests(TestCase):
         self.assertRedirects(response, '/contact/')
         self.assertEqual(ContactMessage.objects.count(), 1)
         self.assertEqual(ContactMessage.objects.get().email, 'visitor@example.com')
+
+    def test_short_contact_message_is_rejected_by_server(self):
+        response = self.client.post('/contact/', {
+            'fullname': 'Test Visitor',
+            'email': 'visitor@example.com',
+            'phone': '+355 69 123 4567',
+            'message': 'dghbdvdfd',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['form'].has_error('message', 'min_length'))
+        self.assertEqual(ContactMessage.objects.count(), 0)
+
+    def test_contact_success_uses_auto_dismissing_toast(self):
+        response = self.client.post('/contact/', {
+            'fullname': 'Test Visitor',
+            'email': 'visitor@example.com',
+            'phone': '+355 69 123 4567',
+            'message': 'I would like to schedule a visit.',
+        }, follow=True)
+
+        self.assertContains(response, 'site-toast-success')
+        self.assertContains(response, 'data-bs-autohide="true"')
+        self.assertContains(response, 'data-bs-delay="5000"')
+        self.assertContains(response, 'Thank you! Your message has been received.')
 
     def test_invalid_contact_submission_is_not_saved(self):
         response = self.client.post('/contact/', {

@@ -5,7 +5,11 @@ from .models import ContactMessage
 
 class ContactMessageForm(forms.ModelForm):
     message = forms.CharField(
+        min_length=10,
         max_length=5000,
+        error_messages={
+            'min_length': 'Please add a little more detail (at least 10 characters).',
+        },
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 4,

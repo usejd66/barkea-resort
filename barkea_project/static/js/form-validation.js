@@ -38,6 +38,9 @@ function initContactFormValidation() {
                 return 'Enter a valid phone number (7-15 digits).';
             }
         }
+        if (field.id === 'id_message' && value.length < 10) {
+            return 'Please add a little more detail (at least 10 characters).';
+        }
         if (field.id === 'id_message' && value.length > 5000) {
             return 'Your message must be 5000 characters or fewer.';
         }

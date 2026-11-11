@@ -164,11 +164,20 @@ function initMobileNavigation() {
     });
 }
 
+function initMessageToasts() {
+    if (!window.bootstrap || !window.bootstrap.Toast) return;
+
+    document.querySelectorAll('.site-toast').forEach(function (toast) {
+        window.bootstrap.Toast.getOrCreateInstance(toast).show();
+    });
+}
+
 function initSiteInteractions() {
     initVillaFilters();
     initGalleryFilters();
     initGalleryLightbox();
     initMobileNavigation();
+    initMessageToasts();
 }
 
 if (document.readyState === 'loading') {
