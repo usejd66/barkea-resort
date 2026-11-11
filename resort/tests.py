@@ -1,7 +1,9 @@
 from django.core import mail
+from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
+from django.urls import reverse
 
-from .models import ContactMessage
+from .models import ContactRequest, Feature, GalleryImage, Villa, VillaType
 
 
 class PublicPagesTests(TestCase):
@@ -36,7 +38,7 @@ class PublicPagesTests(TestCase):
                 self.assertNotContains(response, 'src="/static/"')
 
 
-class ContactMessageTests(TestCase):
+class ContactRequestTests(TestCase):
     def test_contact_form_loads_client_validation_and_accessible_required_fields(self):
         response = self.client.get('/contact/')
         html = response.content.decode()
@@ -73,8 +75,9 @@ class ContactMessageTests(TestCase):
         })
 
         self.assertRedirects(response, '/contact/')
-        self.assertEqual(ContactMessage.objects.count(), 1)
-        self.assertEqual(ContactMessage.objects.get().email, 'visitor@example.com')
+        self.assertEqual(ContactRequest.objects.count(), 1)
+        self.assertEqual(ContactRequest.objects.get().email, 'visitor@example.com')
+        self.assertEqual(ContactRequest.objects.get().status, ContactRequest.Status.NEW)
 
     def test_contact_name_with_numbers_is_rejected_by_server(self):
         response = self.client.post('/contact/', {
@@ -86,7 +89,7 @@ class ContactMessageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['form'].has_error('fullname', 'invalid_name'))
-        self.assertEqual(ContactMessage.objects.count(), 0)
+        self.assertEqual(ContactRequest.objects.count(), 0)
 
     def test_contact_name_accepts_accented_and_hyphenated_names(self):
         response = self.client.post('/contact/', {
@@ -97,7 +100,7 @@ class ContactMessageTests(TestCase):
         })
 
         self.assertRedirects(response, '/contact/')
-        self.assertEqual(ContactMessage.objects.get().fullname, 'Élodie Martin-Smith')
+        self.assertEqual(ContactRequest.objects.get().fullname, 'Élodie Martin-Smith')
 
     def test_short_contact_message_is_rejected_by_server(self):
         response = self.client.post('/contact/', {
@@ -109,7 +112,7 @@ class ContactMessageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['form'].has_error('message', 'min_length'))
-        self.assertEqual(ContactMessage.objects.count(), 0)
+        self.assertEqual(ContactRequest.objects.count(), 0)
 
     def test_contact_success_uses_auto_dismissing_toast(self):
         response = self.client.post('/contact/', {
@@ -134,7 +137,7 @@ class ContactMessageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['form'].errors)
-        self.assertEqual(ContactMessage.objects.count(), 0)
+        self.assertEqual(ContactRequest.objects.count(), 0)
 
     def test_contact_message_is_limited_to_5000_characters(self):
         response = self.client.post('/contact/', {
@@ -146,7 +149,7 @@ class ContactMessageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['form'].has_error('message', 'max_length'))
-        self.assertEqual(ContactMessage.objects.count(), 0)
+        self.assertEqual(ContactRequest.objects.count(), 0)
 
     @override_settings(
         CONTACT_NOTIFICATION_EMAIL='sales@example.com',
@@ -164,3 +167,48 @@ class ContactMessageTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, ['sales@example.com'])
         self.assertIn('visitor@example.com', mail.outbox[0].body)
+
+
+class ResortContentTests(TestCase):
+    def test_villa_features_and_gallery_images_are_linked(self):
+        villa_type = VillaType.objects.create(name='Type A')
+        feature = Feature.objects.create(name='Private parking')
+        villa = Villa.objects.create(
+            name='Garden Villa',
+            villa_type=villa_type,
+            rooms='3+1',
+            area=180,
+            bedrooms=3,
+            bathrooms=3,
+            floors=2,
+            plot=400,
+            description='A modern family villa.',
+        )
+        villa.features.add(feature)
+        gallery_image = GalleryImage.objects.create(
+            villa=villa,
+            image='gallery/garden-villa.jpg',
+            alt_text='Garden Villa exterior',
+            category=GalleryImage.Category.EXTERIOR,
+        )
+
+        self.assertEqual(villa.slug, 'garden-villa')
+        self.assertEqual(villa.villa_type.villas.get(), villa)
+        self.assertEqual(villa.features.get(), feature)
+        self.assertEqual(gallery_image.villa, villa)
+        self.assertEqual(villa.gallery_images.get(), gallery_image)
+
+    def test_content_and_contact_models_are_available_in_admin(self):
+        user_model = get_user_model()
+        user_model.objects.create_superuser(
+            username='admin',
+            email='admin@example.com',
+            password='test-pass',
+        )
+        self.client.login(username='admin', password='test-pass')
+
+        for model in (VillaType, Feature, Villa, GalleryImage, ContactRequest):
+            with self.subTest(model=model.__name__):
+                changelist_url = reverse(f'admin:resort_{model._meta.model_name}_changelist')
+                response = self.client.get(changelist_url)
+                self.assertEqual(response.status_code, 200)

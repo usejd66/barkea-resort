@@ -3,10 +3,10 @@ import unicodedata
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import ContactMessage
+from .models import ContactRequest
 
 
-class ContactMessageForm(forms.ModelForm):
+class ContactRequestForm(forms.ModelForm):
     message = forms.CharField(
         min_length=10,
         max_length=5000,
@@ -22,7 +22,7 @@ class ContactMessageForm(forms.ModelForm):
     )
 
     class Meta:
-        model = ContactMessage
+        model = ContactRequest
         fields = ('fullname', 'email', 'phone', 'message')
         widgets = {
             'fullname': forms.TextInput(attrs={

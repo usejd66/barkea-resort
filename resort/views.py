@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.http import Http404
 from django.shortcuts import redirect, render
 
-from .forms import ContactMessageForm
+from .forms import ContactRequestForm
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +138,7 @@ def location_view(request):
 
 def contact_view(request):
     if request.method == 'POST':
-        form = ContactMessageForm(request.POST)
+        form = ContactRequestForm(request.POST)
         if form.is_valid():
             contact_message = form.save()
             if settings.CONTACT_NOTIFICATION_EMAIL:
@@ -174,5 +174,5 @@ def contact_view(request):
                 messages.success(request, 'Thank you! Your message has been received.')
             return redirect('contact')
     else:
-        form = ContactMessageForm()
+        form = ContactRequestForm()
     return render(request, 'contact.html', {'form': form})
