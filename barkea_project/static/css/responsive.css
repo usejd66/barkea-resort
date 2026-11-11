@@ -103,6 +103,13 @@
 
 /* Small phones */
 @media (max-width: 575.98px) {
+    .row.g-5 {
+        --bs-gutter-x: 1.5rem;
+    }
+
+    .villa-detail-image {
+        --bs-aspect-ratio: 62.5%;
+    }
 
     .container {
         padding-left: 1rem;
