@@ -135,21 +135,30 @@ textarea.form-control {
 }
 
 .contact-form-summary {
+    position: fixed;
+    top: 5.5rem;
+    left: 50%;
+    z-index: 1090;
+    width: min(38rem, calc(100vw - 2rem));
+    max-width: calc(100vw - 2rem);
+    margin: 0;
+    transform: translateX(-50%);
     border: 1px solid #ead6d7;
     border-inline-start: 4px solid #a63e47;
-    border-radius: 0.55rem;
-    background: #fffafa;
+    border-radius: 0.75rem;
+    background: #fff;
     color: #49363a;
-    padding: 1rem 1.125rem;
+    box-shadow: 0 0.75rem 2rem rgba(15, 23, 42, 0.16);
 }
 
 .contact-form-summary[hidden] {
     display: none;
 }
 
-.contact-form-summary:focus {
-    outline: 3px solid rgba(30, 64, 175, 0.24);
-    outline-offset: 2px;
+.contact-form-summary-icon {
+    flex: 0 0 auto;
+    margin: 1.125rem 0 0 1.125rem;
+    color: #a63e47;
 }
 
 .contact-form-summary-title {
@@ -159,8 +168,21 @@ textarea.form-control {
 
 .contact-form-summary a {
     color: #84333b;
+    text-decoration: none;
+}
+
+.contact-form-summary a:hover,
+.contact-form-summary a:focus-visible {
     text-decoration: underline;
     text-underline-offset: 0.15em;
+}
+
+@media (max-width: 575.98px) {
+    .contact-form-summary {
+        top: 5rem;
+        width: calc(100vw - 1.5rem);
+        max-width: calc(100vw - 1.5rem);
+    }
 }
 
 .site-toast-container {

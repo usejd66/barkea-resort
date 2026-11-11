@@ -19,9 +19,15 @@
 
                     <form id="contact-form" action="{% url 'contact' %}" method="post">
                         {% csrf_token %}
-                        <div id="contact-form-feedback" class="contact-form-summary mb-4" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1" hidden>
-                            <p id="contact-form-summary-title" class="contact-form-summary-title mb-2"></p>
-                            <ul id="contact-form-error-list" class="mb-0"></ul>
+                        <div id="contact-form-feedback" class="toast contact-form-summary" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="8000" hidden>
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-exclamation-circle-fill contact-form-summary-icon" aria-hidden="true"></i>
+                                <div class="toast-body">
+                                    <p id="contact-form-summary-title" class="contact-form-summary-title mb-2">Your message wasn't sent. Please correct these fields and try again:</p>
+                                    <ul id="contact-form-error-list" class="mb-0"></ul>
+                                </div>
+                                <button type="button" class="btn-close mt-3 me-3" data-bs-dismiss="toast" aria-label="Dismiss validation message"></button>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="id_fullname" class="form-label fw-semibold small">Full Name *</label>

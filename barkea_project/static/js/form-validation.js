@@ -8,6 +8,7 @@ function initContactFormValidation() {
     const summary = document.getElementById('contact-form-feedback');
     const summaryTitle = document.getElementById('contact-form-summary-title');
     const summaryList = document.getElementById('contact-form-error-list');
+    let summaryToast;
     const fieldLabels = {
         fullname: 'Full name',
         email: 'Email',
@@ -69,7 +70,15 @@ function initContactFormValidation() {
         return !message && field.validity.valid;
     }
 
-    function updateSummary(showSummary) {
+    function getFieldError(field) {
+        const clientError = getError(field);
+        if (clientError) return clientError;
+
+        const serverErrors = document.getElementById(`${field.name}-server-errors`);
+        return serverErrors ? serverErrors.textContent.trim() : '';
+    }
+
+    function updateSummary(announce) {
         if (!summary || !summaryList) return;
 
         const invalidFields = fields.filter(function (field) {
@@ -77,19 +86,32 @@ function initContactFormValidation() {
         });
         if (summaryTitle) {
             summaryTitle.textContent = invalidFields.length === 1
-                ? 'Please review the highlighted field before sending.'
-                : `Please review the ${invalidFields.length} highlighted fields before sending.`;
+                ? "Your message wasn't sent. Please correct this field and try again:"
+                : `Your message wasn't sent. Please correct these ${invalidFields.length} fields and try again:`;
         }
         summaryList.replaceChildren();
         invalidFields.forEach(function (field) {
             const item = document.createElement('li');
             const link = document.createElement('a');
             link.href = `#${field.id}`;
-            link.textContent = fieldLabels[field.name];
+            link.textContent = `${fieldLabels[field.name]} — ${getFieldError(field)}`;
             item.appendChild(link);
             summaryList.appendChild(item);
         });
-        summary.hidden = !showSummary || invalidFields.length === 0;
+
+        if (invalidFields.length === 0) {
+            if (summaryToast) {
+                summaryToast.hide();
+            } else {
+                summary.hidden = true;
+            }
+        } else if (announce) {
+            summary.hidden = false;
+            if (window.bootstrap && window.bootstrap.Toast) {
+                summaryToast = window.bootstrap.Toast.getOrCreateInstance(summary);
+                summaryToast.show();
+            }
+        }
     }
 
     let showSummary = false;
@@ -110,6 +132,9 @@ function initContactFormValidation() {
         });
     });
 
+    summary.addEventListener('hidden.bs.toast', function () {
+        summary.hidden = true;
+    });
     updateSummary(showSummary);
 
     form.addEventListener('invalid', function (event) {
@@ -117,9 +142,8 @@ function initContactFormValidation() {
         if (!fields.includes(field)) return;
 
         event.preventDefault();
-        showSummary = true;
         validateField(field, true);
-        updateSummary(showSummary);
+        updateSummary(true);
     }, true);
 
     form.addEventListener('submit', function (event) {
@@ -129,8 +153,7 @@ function initContactFormValidation() {
 
         if (!valid) {
             event.preventDefault();
-            showSummary = true;
-            updateSummary(showSummary);
+            updateSummary(true);
             const firstInvalid = fields.find(function (field) {
                 return !field.validity.valid;
             });
