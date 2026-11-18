@@ -155,11 +155,12 @@ function initMobileNavigation() {
     const navigation = document.getElementById('mainNavbar');
     if (!navigation || !window.bootstrap) return;
 
-    const collapse = window.bootstrap.Collapse.getOrCreateInstance(navigation, { toggle: false });
+    // Mbyll panelin anësor kur zgjidhet një lidhje (vetëm në celular/tablet).
+    const offcanvas = window.bootstrap.Offcanvas.getOrCreateInstance(navigation);
     navigation.addEventListener('click', function (event) {
         const link = event.target.closest('a[href]');
         if (link && window.matchMedia('(max-width: 991.98px)').matches) {
-            collapse.hide();
+            offcanvas.hide();
         }
     });
 }
@@ -172,7 +173,24 @@ function initMessageToasts() {
     });
 }
 
+// Ruan lartësinë reale të menusë, që fotoja kryesore të zërë saktë pjesën tjetër të ekranit.
+function initHeaderHeight() {
+    const header = document.querySelector('header.sticky-top');
+    if (!header) return;
+
+    const update = function () {
+        document.documentElement.style.setProperty('--barkea-header-h', `${header.offsetHeight}px`);
+    };
+    update();
+    if (window.ResizeObserver) {
+        new ResizeObserver(update).observe(header);
+    } else {
+        window.addEventListener('resize', update);
+    }
+}
+
 function initSiteInteractions() {
+    initHeaderHeight();
     initVillaFilters();
     initGalleryFilters();
     initGalleryLightbox();

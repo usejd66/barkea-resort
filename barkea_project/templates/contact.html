@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static responsive %}
 
 {% block title %}Barkea Resort | Contact{% endblock %}
 {% block meta_description %}Contact Us - Get in touch with Barkea Resort. Send a message or schedule a visit.{% endblock %}
@@ -118,8 +118,8 @@
 <section class="pb-5 bg-white">
     <div class="container">
         <div class="position-relative text-white text-center rounded-4 overflow-hidden">
-            <img src="{% static 'image/hero-home.jpg' %}" alt="" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
-            <div class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-50"></div>
+            <img src="{% static 'image/hero-home.jpg' %}"{% responsive 'image/hero-home.jpg' '100vw' %} loading="lazy" decoding="async" alt="" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+            <div class="position-absolute top-0 start-0 w-100 h-100 hero-overlay-soft"></div>
             <div class="position-relative py-5 px-3">
                 <div class="py-4">
                     <h2 class="fw-bold mb-2">Your new life starts here.</h2>

@@ -3,6 +3,7 @@ from unittest import mock
 from django.core import mail
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
+from django.template import Context, Template
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
@@ -385,3 +386,42 @@ class ResortContentTests(TestCase):
                 changelist_url = reverse(f'admin:resort_{model._meta.model_name}_changelist')
                 response = self.client.get(changelist_url)
                 self.assertEqual(response.status_code, 200)
+
+
+class ResponsiveImageTests(TestCase):
+    def test_hero_offers_webp_sizes_and_keeps_original_as_fallback(self):
+        response = self.client.get('/')
+        html = response.content.decode()
+
+        self.assertIn('src="/static/image/hero-home.jpg"', html)
+        self.assertIn('/static/image/responsive/hero-home-800.webp 800w', html)
+        # Në telefon fotoja mbush lartësinë e ekranit, ndaj kërkon kopje më të gjerë.
+        self.assertIn('sizes="(max-width: 991.98px) and (orientation: portrait) 145vh, 100vw"', html)
+
+    def test_every_listed_copy_exists(self):
+        from .images import load_manifest
+
+        manifest = load_manifest()
+        self.assertIn('image/hero-home.jpg', manifest)
+        for source, variants in manifest.items():
+            with self.subTest(source=source):
+                self.assertTrue(finders.find(source))
+                for _width, path in variants:
+                    self.assertTrue(finders.find(path), path)
+
+    def test_below_the_fold_images_are_lazy_loaded(self):
+        response = self.client.get('/')
+        self.assertRegex(
+            response.content.decode(),
+            r'<img src="/static/image/gallery/render-1.jpg"[^>]*loading="lazy"',
+        )
+
+    def test_gallery_lightbox_still_uses_full_quality_original(self):
+        response = self.client.get('/gallery/')
+        self.assertContains(response, 'data-gallery-full="/static/image/villas/type-a-kitchen.jpg"')
+
+    def test_tag_renders_nothing_for_uploaded_or_unknown_images(self):
+        template = Template("{% load responsive %}<img{% responsive path '100vw' %}>")
+        for path in ('', 'image/not-built.jpg'):
+            with self.subTest(path=path):
+                self.assertEqual(template.render(Context({'path': path})), '<img>')

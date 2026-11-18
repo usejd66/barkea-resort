@@ -36,6 +36,16 @@ python manage.py collectstatic --noinput
 
 Fotot që ngarkohen nga admin-i ruhen te `media/` dhe duhet t'i shërbejë serveri (p.sh. nginx ose "static files mapping" i hostit: `/media/` → dosja `media/`). Nëse hosti nuk e lejon këtë, vendos `DJANGO_SERVE_MEDIA=True`, që Django t'i shërbejë vetë. Kjo zgjidhje është më e ngadaltë, por mjafton për një faqe të vogël.
 
+## Fotot (shpejtësia e ngarkimit)
+
+Fotot origjinale te `barkea_project/static/image/` nuk ndryshohen. Për shpejtësi, faqja u dërgon shfletuesve kopje WebP me cilësi të lartë në disa madhësi (`srcset`), dhe secili shfletues merr madhësinë që i duhet ekranit. Origjinalet përdoren te pamja e plotë e galerisë.
+
+Kur shton ose zëvendëson një foto statike, rindërto kopjet dhe bëj commit edhe `resort/responsive_images.json`:
+
+```sh
+python manage.py build_responsive_images
+```
+
 ## Testet
 
 ```sh

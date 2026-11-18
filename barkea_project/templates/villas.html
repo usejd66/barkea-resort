@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static responsive %}
 
 {% block title %}Barkea Resort | Villa Typologies{% endblock %}
 {% block meta_description %}Our Villa Typologies - Find the perfect villa for your lifestyle at Barkea Resort.{% endblock %}
@@ -54,7 +54,7 @@
             <div class="col-md-6" data-villa data-area="{{ villa.area }}" data-floors="{{ villa.floors }}" data-type="{{ villa.type }}">
                 <article class="card h-100 border shadow-sm rounded-4 overflow-hidden p-3">
                     <div class="ratio ratio-16x9">
-                        <img src="{{ villa.image_url }}" alt="Villa {{ villa.name }}" class="object-fit-cover rounded-3">
+                        <img src="{{ villa.image_url }}"{% responsive villa.image_static '(min-width: 768px) 50vw, 100vw' %} loading="lazy" decoding="async" alt="Villa {{ villa.name }}" class="object-fit-cover rounded-3">
                     </div>
                     <div class="card-body pt-3 px-1 pb-0">
                         <h2 class="h4 fw-bold mb-1">{{ villa.name }}</h2>
@@ -81,7 +81,7 @@
         <div class="row align-items-center g-4 bg-white p-4 rounded-4 shadow-sm mx-0">
             <div class="col-lg-6">
                 <div class="ratio ratio-21x9">
-                    <img src="{% static 'image/hero-home.jpg' %}" alt="Individual plots at Barkea Resort" class="object-fit-cover rounded-3">
+                    <img src="{% static 'image/hero-home.jpg' %}"{% responsive 'image/hero-home.jpg' '(min-width: 992px) 50vw, 100vw' %} loading="lazy" decoding="async" alt="Individual plots at Barkea Resort" class="object-fit-cover rounded-3">
                 </div>
             </div>
             <div class="col-lg-6">

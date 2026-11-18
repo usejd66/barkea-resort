@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static responsive %}
 
 {% block title %}Barkea Resort | Gallery{% endblock %}
 {% block meta_description %}Explore Barkea Resort villas, interiors, outdoor spaces and amenities.{% endblock %}
@@ -36,7 +36,7 @@
                             data-gallery-caption="{{ image.caption }}"
                             aria-label="View photo: {{ image.caption }}">
                         <span class="ratio ratio-4x3 gallery-image-frame">
-                            <img src="{{ image.image_url }}" alt="{{ image.alt_text }}" width="1200" height="900" loading="lazy" decoding="async">
+                            <img src="{{ image.image_url }}"{% responsive image.image_static '(min-width: 992px) 33vw, 50vw' %} alt="{{ image.alt_text }}" width="1200" height="900" loading="lazy" decoding="async">
                         </span>
                         <span class="gallery-card-caption">{{ image.caption }}</span>
                     </button>

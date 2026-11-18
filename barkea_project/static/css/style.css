@@ -1,14 +1,20 @@
 :root {
-    --barkea-navy: #0f172a;   /* Blu e natës shumë e thellë (Zëvendëson jeshilen e errët) */
-    --barkea-blue: #1e40af;   /* Blu mbretërore elektrike dhe e gjallë */
-    --barkea-soft: #f8fafc;   /* E bardhë e pastër akulli */
-    --barkea-gold: #9a4f00;
+    /* Paleta "Natyrë": jeshile ulliri, rërë dhe ar i butë */
+    --barkea-primary: #4f6f52;       /* Jeshile ulliri: butona, lidhje, theksime */
+    --barkea-primary-dark: #2f3e33;  /* Jeshile e thellë: hover, footer, seksione të errëta */
+    --barkea-sand: #f7f3ec;          /* Rërë e lehtë: sfonde të buta */
+    --barkea-gold: #a9844a;          /* Ar i butë: ikona */
+    --barkea-text: #2f3a33;          /* Tekst kryesor, gri-jeshile shumë e errët */
 
     /* Përditësimi për Bootstrap */
-    --bs-primary: #1e40af;
-    --bs-primary-rgb: 30, 64, 175;
-    --bs-dark-rgb: 15, 23, 42;      
-    --bs-light-rgb: 248, 250, 252;  
+    --bs-primary: #4f6f52;
+    --bs-primary-rgb: 79, 111, 82;
+    --bs-dark-rgb: 47, 62, 51;
+    --bs-light-rgb: 247, 243, 236;
+    --bs-link-color: #4f6f52;
+    --bs-link-color-rgb: 79, 111, 82;
+    --bs-link-hover-color: #2f3e33;
+    --bs-link-hover-color-rgb: 47, 62, 51;
 }
 
 
@@ -17,11 +23,11 @@
 }
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
+    scroll-padding-top: var(--barkea-header-h, 5rem);
 }
 
 body {
-    color: #263544;
+    color: var(--barkea-text);
     overflow-x: hidden;
 }
 
@@ -33,12 +39,40 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: -0.01em;
 }
 
+/* Komponentë Bootstrap që përndryshe mbajnë blunë e paracaktuar */
+.nav-pills {
+    --bs-nav-pills-link-active-bg: var(--barkea-primary);
+}
+
+.nav {
+    --bs-nav-link-color: var(--barkea-primary);
+    --bs-nav-link-hover-color: var(--barkea-primary-dark);
+}
+
+.form-check-input:checked {
+    background-color: var(--barkea-primary);
+    border-color: var(--barkea-primary);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--barkea-primary);
+    --bs-btn-border-color: var(--barkea-primary);
+    --bs-btn-hover-bg: var(--barkea-primary);
+    --bs-btn-hover-border-color: var(--barkea-primary);
+    --bs-btn-active-bg: var(--barkea-primary-dark);
+    --bs-btn-active-border-color: var(--barkea-primary-dark);
+}
+
 /* Buttons */
 .btn-primary {
-    --bs-btn-bg: var(--barkea-blue);
-    --bs-btn-border-color: var(--barkea-blue);
-    --bs-btn-hover-bg: var(--barkea-navy);
-    --bs-btn-hover-border-color: var(--barkea-navy);
+    --bs-btn-bg: var(--barkea-primary);
+    --bs-btn-border-color: var(--barkea-primary);
+    --bs-btn-hover-bg: var(--barkea-primary-dark);
+    --bs-btn-hover-border-color: var(--barkea-primary-dark);
+    --bs-btn-active-bg: var(--barkea-primary-dark);
+    --bs-btn-active-border-color: var(--barkea-primary-dark);
+    --bs-btn-disabled-bg: var(--barkea-primary);
+    --bs-btn-disabled-border-color: var(--barkea-primary);
 }
 
 .btn {
@@ -54,6 +88,12 @@ header.sticky-top {
     z-index: 1030;
 }
 
+/* Paneli i menusë ndodhet brenda header-it (z-index 1030), prandaj sfondi i errët
+   duhet të qëndrojë poshtë header-it, që të mos mbulojë vetë panelin. */
+.offcanvas-backdrop {
+    z-index: 1029;
+}
+
 .navbar {
     min-height: 72px;
 }
@@ -66,9 +106,32 @@ header.sticky-top {
     font-weight: 500;
 }
 
+.navbar .nav-link {
+    color: var(--barkea-text);
+}
+
 .navbar .nav-link:hover,
 .navbar .nav-link.active {
-    color: #fff;
+    color: var(--barkea-primary);
+}
+
+.navbar-brand,
+.navbar-brand:hover {
+    color: var(--barkea-primary-dark);
+}
+
+/* Hero: hije vetëm pas tekstit, që fotoja të mbetet e ndritshme */
+.hero-overlay {
+    background: linear-gradient(
+        90deg,
+        rgba(30, 40, 32, 0.6) 0%,
+        rgba(30, 40, 32, 0.3) 45%,
+        rgba(30, 40, 32, 0) 80%
+    );
+}
+
+.hero-overlay-soft {
+    background: rgba(30, 40, 32, 0.35);
 }
 
 /* Hero */
@@ -87,7 +150,7 @@ main > section:first-child h1 {
 
 .card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 1rem 2rem rgba(31, 58, 82, 0.15) !important;
+    box-shadow: 0 1rem 2rem rgba(79, 111, 82, 0.2) !important;
 }
 
 .card img {
@@ -111,8 +174,8 @@ main > section:first-child h1 {
 
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--barkea-blue);
-    box-shadow: 0 0 0 0.2rem rgba(47, 93, 130, 0.2);
+    border-color: var(--barkea-primary);
+    box-shadow: 0 0 0 0.2rem rgba(79, 111, 82, 0.2);
 }
 
 textarea.form-control {
@@ -140,7 +203,7 @@ textarea.form-control {
     border-radius: 0.75rem;
     background: #fffafa;
     color: #49363a;
-    box-shadow: 0 0.25rem 0.75rem rgba(15, 23, 42, 0.08);
+    box-shadow: 0 0.25rem 0.75rem rgba(30, 40, 32, 0.08);
 }
 
 .contact-form-summary[hidden] {
@@ -154,7 +217,7 @@ textarea.form-control {
 }
 
 .contact-form-summary-title {
-    color: #263544;
+    color: var(--barkea-text);
     font-weight: 600;
     line-height: 1.4;
 }
@@ -193,7 +256,7 @@ textarea.form-control {
     border: 1px solid #e2e8f0;
     border-radius: 0.75rem;
     background: #fff;
-    box-shadow: 0 0.75rem 2rem rgba(15, 23, 42, 0.16);
+    box-shadow: 0 0.75rem 2rem rgba(30, 40, 32, 0.16);
 }
 
 .site-toast-success {
@@ -209,7 +272,7 @@ textarea.form-control {
 }
 
 .site-toast-info {
-    border-inline-start: 4px solid var(--barkea-blue);
+    border-inline-start: 4px solid var(--barkea-primary);
 }
 
 .site-toast-icon {
@@ -229,7 +292,7 @@ textarea.form-control {
 }
 
 .site-toast-info .site-toast-icon {
-    color: var(--barkea-blue);
+    color: var(--barkea-primary);
 }
 
 /* Gallery */
@@ -253,10 +316,10 @@ textarea.form-control {
 /* Gallery */
 .gallery-card {
     overflow: hidden;
-    border: 1px solid rgba(15, 23, 42, 0.1);
+    border: 1px solid rgba(30, 40, 32, 0.1);
     border-radius: 1rem;
     background: #fff;
-    box-shadow: 0 0.25rem 0.75rem rgba(15, 23, 42, 0.06);
+    box-shadow: 0 0.25rem 0.75rem rgba(30, 40, 32, 0.06);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -272,14 +335,14 @@ textarea.form-control {
 
 .gallery-card-button:focus-visible,
 .gallery-lightbox button:focus-visible {
-    outline: 3px solid var(--barkea-blue);
+    outline: 3px solid var(--barkea-primary);
     outline-offset: 3px;
 }
 
 .gallery-image-frame {
     display: block;
     overflow: hidden;
-    background: var(--barkea-soft);
+    background: var(--barkea-sand);
 }
 
 .gallery-image-frame img {
@@ -304,12 +367,12 @@ textarea.form-control {
     overflow: auto;
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 1rem;
-    background: #0f172a;
+    background: #1e2820;
     color: #fff;
 }
 
 .gallery-lightbox::backdrop {
-    background: rgba(2, 6, 23, 0.88);
+    background: rgba(20, 28, 22, 0.9);
     backdrop-filter: blur(4px);
 }
 
@@ -341,7 +404,7 @@ textarea.form-control {
 @media (hover: hover) {
     .gallery-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 0.75rem 1.75rem rgba(15, 23, 42, 0.14);
+        box-shadow: 0 0.75rem 1.75rem rgba(30, 40, 32, 0.14);
     }
 
     .gallery-card:hover .gallery-image-frame img {

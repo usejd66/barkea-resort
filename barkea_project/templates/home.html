@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static responsive %}
 
 {% block title %}Barkea Resort | Home{% endblock %}
 {% block meta_description %}Barkea Resort - modern villas from 3+1 to 6+1 in a gated, green community in Lundër / Farkë, just 8 km from Tirana.{% endblock %}
@@ -8,8 +8,8 @@
 
 <!-- 1. Hero -->
 <section class="home-hero position-relative text-white overflow-hidden">
-    <img src="{% static 'image/hero-home.jpg' %}" alt="" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
-    <div class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-50"></div>
+    <img src="{% static 'image/hero-home.jpg' %}"{% responsive 'image/hero-home.jpg' '(max-width: 991.98px) and (orientation: portrait) 145vh, 100vw' %} fetchpriority="high" decoding="async" alt="" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+    <div class="position-absolute top-0 start-0 w-100 h-100 hero-overlay"></div>
     <div class="container position-relative py-5">
         <div class="row py-5">
             <div class="col-lg-7 py-5">
@@ -20,27 +20,43 @@
             </div>
         </div>
     </div>
+    <!-- Në celular: tregon që ka më shumë përmbajtje poshtë fotos -->
+    <a href="#key-facts" class="hero-scroll-cue d-lg-none" aria-label="Scroll to key facts">
+        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+    </a>
 </section>
 
 <!-- 2. Key facts: what Barkea Resort is at a glance -->
-<section class="bg-dark text-white py-4">
+<section id="key-facts" class="home-stats bg-primary text-white py-4">
     <div class="container">
         <div class="row text-center g-3">
             <div class="col-6 col-md-3">
-                <div class="h4 fw-bold mb-0">8 km</div>
-                <div class="small opacity-75">from Tirana</div>
+                <div class="home-stat">
+                    <i class="bi bi-geo-alt home-stat-icon d-lg-none" aria-hidden="true"></i>
+                    <div class="h4 fw-bold mb-0">8 km</div>
+                    <div class="small opacity-75">from Tirana</div>
+                </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="h4 fw-bold mb-0">3+1 to 6+1</div>
-                <div class="small opacity-75">villa typologies</div>
+                <div class="home-stat">
+                    <i class="bi bi-house-door home-stat-icon d-lg-none" aria-hidden="true"></i>
+                    <div class="h4 fw-bold mb-0">3+1 to 6+1</div>
+                    <div class="small opacity-75">villa typologies</div>
+                </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="h4 fw-bold mb-0">180 &ndash; 320 m²</div>
-                <div class="small opacity-75">living area</div>
+                <div class="home-stat">
+                    <i class="bi bi-arrows-angle-expand home-stat-icon d-lg-none" aria-hidden="true"></i>
+                    <div class="h4 fw-bold mb-0">180 &ndash; 320 m²</div>
+                    <div class="small opacity-75">living area</div>
+                </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="h4 fw-bold mb-0">Gated</div>
-                <div class="small opacity-75">private community</div>
+                <div class="home-stat">
+                    <i class="bi bi-shield-check home-stat-icon d-lg-none" aria-hidden="true"></i>
+                    <div class="h4 fw-bold mb-0">Gated</div>
+                    <div class="small opacity-75">private community</div>
+                </div>
             </div>
         </div>
     </div>
@@ -58,7 +74,7 @@
             </div>
             <div class="col-lg-5">
                 <div class="ratio ratio-16x9">
-                    <img src="{% static 'image/about-projekt.jpg' %}" alt="Barkea Resort villas surrounded by greenery" class="object-fit-cover rounded-4 shadow-sm">
+                    <img src="{% static 'image/about-projekt.jpg' %}"{% responsive 'image/about-projekt.jpg' '(min-width: 992px) 40vw, 100vw' %} loading="lazy" decoding="async" alt="Barkea Resort villas surrounded by greenery" class="object-fit-cover rounded-4 shadow-sm">
                 </div>
             </div>
         </div>
@@ -114,7 +130,7 @@
                 <a href="{% url 'villa_detail' villa.slug %}" class="text-decoration-none">
                     <article class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
                         <div class="ratio ratio-4x3">
-                            <img src="{{ villa.image_url }}" alt="Villa {{ villa.name }}" class="object-fit-cover">
+                            <img src="{{ villa.image_url }}"{% responsive villa.image_static '(min-width: 768px) 25vw, 100vw' %} loading="lazy" decoding="async" alt="Villa {{ villa.name }}" class="object-fit-cover">
                         </div>
                         <div class="card-body p-3">
                             <h3 class="h5 fw-bold text-dark mb-1">{{ villa.name }}</h3>
@@ -139,16 +155,16 @@
         <p class="text-secondary mb-4">A selection of renders showing the architecture, surroundings and atmosphere of Barkea Resort.</p>
         <div class="row g-4 align-items-center">
             <div class="col-6 col-md-2">
-                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-1.jpg' %}" alt="Barkea Resort render 1" class="object-fit-cover rounded-4 shadow-sm"></div>
+                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-1.jpg' %}"{% responsive 'image/gallery/render-1.jpg' '(min-width: 768px) 17vw, 50vw' %} loading="lazy" decoding="async" alt="Barkea Resort render 1" class="object-fit-cover rounded-4 shadow-sm"></div>
             </div>
             <div class="col-6 col-md-2">
-                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-2.jpg' %}" alt="Barkea Resort render 2" class="object-fit-cover rounded-4 shadow-sm"></div>
+                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-2.jpg' %}"{% responsive 'image/gallery/render-2.jpg' '(min-width: 768px) 17vw, 50vw' %} loading="lazy" decoding="async" alt="Barkea Resort render 2" class="object-fit-cover rounded-4 shadow-sm"></div>
             </div>
             <div class="col-6 col-md-2">
-                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-3.jpg' %}" alt="Barkea Resort render 3" class="object-fit-cover rounded-4 shadow-sm"></div>
+                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-3.jpg' %}"{% responsive 'image/gallery/render-3.jpg' '(min-width: 768px) 17vw, 50vw' %} loading="lazy" decoding="async" alt="Barkea Resort render 3" class="object-fit-cover rounded-4 shadow-sm"></div>
             </div>
             <div class="col-6 col-md-2">
-                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-4.jpg' %}" alt="Barkea Resort render 4" class="object-fit-cover rounded-4 shadow-sm"></div>
+                <div class="ratio ratio-1x1"><img src="{% static 'image/gallery/render-4.jpg' %}"{% responsive 'image/gallery/render-4.jpg' '(min-width: 768px) 17vw, 50vw' %} loading="lazy" decoding="async" alt="Barkea Resort render 4" class="object-fit-cover rounded-4 shadow-sm"></div>
             </div>
             <div class="col-md-4">
                 <a href="{% url 'gallery' %}" class="btn btn-primary btn-lg rounded-3 w-100 py-3">View Gallery <i class="bi bi-arrow-right"></i></a>

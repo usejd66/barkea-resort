@@ -2,18 +2,56 @@
 @media (max-width: 991.98px) {
 
     :root {
-        --barkea-header-h: 64px;
+        --barkea-header-h: 78px; /* vlerë fillestare; main.js vendos lartësinë reale */
     }
 
-    .navbar-collapse {
-        padding: 1rem 0 0.5rem;
-        margin-top: 0.75rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    /* Paneli anësor i menusë */
+    .site-offcanvas {
+        --bs-offcanvas-width: min(320px, 85vw);
+        background: #fff;
+    }
+
+    .site-offcanvas .offcanvas-header {
+        padding: 1.1rem 1.5rem;
+        border-bottom: 1px solid rgba(47, 62, 51, 0.1);
+    }
+
+    .site-offcanvas .offcanvas-body {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 1.5rem 1.5rem;
+    }
+
+    /* `ms-auto` e desktopit do i shtynte lidhjet djathtas brenda panelit */
+    .site-offcanvas .navbar-nav {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+
+    .site-offcanvas-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: auto;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(47, 62, 51, 0.1);
+        font-size: 0.95rem;
+    }
+
+    .site-offcanvas-contact a {
+        color: var(--barkea-text);
+        text-decoration: none;
+    }
+
+    .site-offcanvas-contact i {
+        color: var(--barkea-gold);
+        margin-right: 0.5rem;
     }
 
     .navbar .nav-link {
         padding: 0.75rem 0.25rem;
         font-size: 1.05rem;
+        border-bottom: 1px solid rgba(47, 62, 51, 0.06);
     }
 
     .navbar .nav-link::after {
@@ -21,15 +59,15 @@
     }
 
     .navbar .nav-link.active {
-        color: #fff;
+        color: var(--barkea-primary);
         font-weight: 600;
-        border-left: 3px solid #fff;
+        border-left: 3px solid var(--barkea-primary);
         padding-left: 0.75rem;
     }
 
     .navbar .btn {
         width: 100%;
-        margin-top: 0.5rem;
+        margin-top: 1.25rem;
     }
 
     .display-3 {
@@ -222,5 +260,111 @@
     .gallery-card-caption {
         padding: 0.7rem;
         font-size: 0.9rem;
+    }
+}
+/* ===== Faqja kryesore në celular/tablet: hero në gjithë ekranin, numrat poshtë ===== */
+@media (max-width: 991.98px) {
+
+    /* Fotoja zë gjithë ekranin nën menunë; numrat shfaqen vetëm pas scroll-it */
+    /* Selektor më specifik se `main > section:first-child:has(> img)` te style.css */
+    main > section.home-hero:first-child {
+        display: flex;
+        align-items: flex-end;
+        min-height: calc(100vh - var(--barkea-header-h));
+        min-height: calc(100svh - var(--barkea-header-h));
+    }
+
+    .home-hero > .container {
+        width: 100%;
+        padding-bottom: 4.5rem !important;
+    }
+
+    /* Hije nga poshtë, ku ndodhet teksti; pjesa e sipërme e fotos mbetet e ndritshme */
+    .home-hero .hero-overlay {
+        background: linear-gradient(
+            180deg,
+            rgba(30, 40, 32, 0) 0%,
+            rgba(30, 40, 32, 0.15) 35%,
+            rgba(30, 40, 32, 0.75) 100%
+        );
+    }
+
+    .hero-scroll-cue {
+        position: absolute;
+        left: 50%;
+        bottom: 1.25rem;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        color: #fff;
+        font-size: 1.1rem;
+        text-decoration: none;
+        animation: hero-scroll-bounce 2s ease-in-out infinite;
+    }
+
+    .hero-scroll-cue:hover,
+    .hero-scroll-cue:focus-visible {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Numrat: karta të bardha mbi sfond rëre, në vend të shiritit jeshil */
+    .home-stats {
+        background: var(--barkea-sand) !important;
+        color: var(--barkea-text) !important;
+        padding: 2.5rem 0 !important;
+    }
+
+    .home-stats .row {
+        --bs-gutter-x: 0.85rem;
+        --bs-gutter-y: 0.85rem;
+    }
+
+    .home-stat {
+        height: 100%;
+        padding: 1.25rem 0.75rem;
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 18px rgba(30, 40, 32, 0.06);
+    }
+
+    .home-stat-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        margin-bottom: 0.75rem;
+        border-radius: 50%;
+        background: var(--barkea-sand);
+        color: var(--barkea-gold);
+        font-size: 1.2rem;
+    }
+
+    .home-stat .h4 {
+        color: var(--barkea-primary-dark);
+        font-size: 1.3rem;
+    }
+
+    .home-stat .small {
+        margin-top: 0.15rem;
+        opacity: 1 !important;
+        color: #6b746d;
+    }
+}
+
+@keyframes hero-scroll-bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-scroll-cue {
+        animation: none;
     }
 }

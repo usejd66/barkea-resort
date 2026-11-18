@@ -33,6 +33,11 @@ def _asset_url(uploaded_image, static_image):
     return ''
 
 
+def _static_source(uploaded_image, static_image):
+    """Shtegu statik i fotos kur nuk ka foto të ngarkuar; përdoret për kopjet responsive."""
+    return '' if uploaded_image else static_image
+
+
 def _villa_data(villa):
     data = {
         'id': villa.pk,
@@ -47,9 +52,11 @@ def _villa_data(villa):
         'plot': villa.plot,
         'description': villa.description,
         'image_url': _asset_url(villa.image, villa.static_image),
+        'image_static': _static_source(villa.image, villa.static_image),
         'gallery': [
             {
                 'src': _asset_url(image.image, image.static_image),
+                'static': _static_source(image.image, image.static_image),
                 'label': image.caption,
             }
             for image in villa.gallery_images.all()
@@ -64,6 +71,9 @@ def _villa_data(villa):
         url = _asset_url(getattr(villa, f'plan_{floor}'), getattr(villa, f'static_plan_{floor}'))
         data[f'plan_{floor}'] = bool(url)
         data[f'plan_{floor}_url'] = url
+        data[f'plan_{floor}_static'] = _static_source(
+            getattr(villa, f'plan_{floor}'), getattr(villa, f'static_plan_{floor}'),
+        )
     return data
 
 
@@ -113,6 +123,7 @@ def gallery_view(request):
     gallery_images = [
         {
             'image_url': _asset_url(image.image, image.static_image),
+            'image_static': _static_source(image.image, image.static_image),
             'alt_text': image.alt_text,
             'caption': image.caption or image.alt_text,
             'category': image.category,
