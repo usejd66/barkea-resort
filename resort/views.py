@@ -36,6 +36,7 @@ def _asset_url(uploaded_image, static_image):
 def _villa_data(villa):
     data = {
         'id': villa.pk,
+        'slug': villa.slug,
         'type': villa.villa_type.slug,
         'name': villa.name,
         'rooms': villa.rooms,
@@ -84,12 +85,22 @@ def villas_view(request):
     return render(request, 'villas.html', {'villas': villas, 'villa_types': villa_types})
 
 
-def villa_detail_view(request, pk):
+def villa_detail_view(request, slug):
     try:
-        villa = _published_villas().get(pk=pk)
+        villa = _published_villas().get(slug=slug)
     except Villa.DoesNotExist as error:
         raise Http404('Villa not found') from error
     return render(request, 'villa-detail.html', {'villa': _villa_data(villa)})
+
+
+def villa_legacy_redirect_view(request, pk):
+    # A numeric slug (e.g. a villa named "2025") also lands here, so it wins over an id.
+    if _published_villas().filter(slug=str(pk)).exists():
+        return villa_detail_view(request, str(pk))
+    villa = _published_villas().filter(pk=pk).first()
+    if villa is None:
+        raise Http404('Villa not found')
+    return redirect('villa_detail', slug=villa.slug, permanent=True)
 
 
 def gallery_view(request):

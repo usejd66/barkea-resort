@@ -34,11 +34,30 @@ class PublicPagesTests(TestCase):
         self.assertEqual(response.content.count(b'data-gallery-item'), 14)
 
     def test_villa_pages_do_not_render_missing_floor_plan_urls(self):
-        for villa_id in (1, 2, 3, 4):
-            with self.subTest(villa_id=villa_id):
-                response = self.client.get(f'/villas/{villa_id}/')
+        for villa in Villa.objects.all():
+            with self.subTest(villa=villa.slug):
+                response = self.client.get(f'/villas/{villa.slug}/')
                 self.assertEqual(response.status_code, 200)
                 self.assertNotContains(response, 'src="/static/"')
+
+    def test_villa_links_use_slugs(self):
+        response = self.client.get('/villas/')
+
+        self.assertContains(response, 'href="/villas/vile-ne-shitje-tirane/"')
+        self.assertNotContains(response, 'href="/villas/1/"')
+
+    def test_old_numeric_villa_urls_redirect_permanently_to_slug(self):
+        villa = Villa.objects.get(slug='vile-ne-shitje-tirane')
+
+        response = self.client.get(f'/villas/{villa.pk}/')
+
+        self.assertRedirects(
+            response, '/villas/vile-ne-shitje-tirane/', status_code=301,
+        )
+
+    def test_unknown_villa_slug_returns_404(self):
+        response = self.client.get('/villas/no-such-villa/')
+        self.assertEqual(response.status_code, 404)
 
 
 class ContactRequestTests(TestCase):
@@ -280,7 +299,7 @@ class ResortContentTests(TestCase):
 
         home_response = self.client.get('/')
         villas_response = self.client.get('/villas/')
-        detail_response = self.client.get(f'/villas/{villa.pk}/')
+        detail_response = self.client.get(f'/villas/{villa.slug}/')
         gallery_response = self.client.get('/gallery/')
 
         self.assertContains(home_response, 'Garden Villa')
@@ -298,6 +317,28 @@ class ResortContentTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['villas'], [])
         self.assertEqual(self.client.get('/villas/1/').status_code, 404)
+        self.assertEqual(self.client.get('/villas/vile-ne-shitje-tirane/').status_code, 404)
+
+    def test_numeric_slug_is_served_instead_of_redirecting(self):
+        villa_type = VillaType.objects.create(name='Year Type')
+        villa = Villa.objects.create(
+            name='2025',
+            villa_type=villa_type,
+            rooms='3+1',
+            area=180,
+            bedrooms=3,
+            bathrooms=3,
+            floors=2,
+            plot=400,
+            description='A villa with a numeric name.',
+            is_published=True,
+        )
+
+        response = self.client.get('/villas/2025/')
+
+        self.assertEqual(villa.slug, '2025')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'A villa with a numeric name.')
 
     def test_gallery_hides_images_of_unpublished_villas(self):
         villa_type = VillaType.objects.create(name='Hidden Type')
