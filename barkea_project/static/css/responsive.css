@@ -262,20 +262,60 @@
         font-size: 0.9rem;
     }
 }
-/* ===== Faqja kryesore në celular/tablet: hero në gjithë ekranin, numrat poshtë ===== */
+/* ===== Faqja kryesore: fotoja zë gjithë ekranin nën menunë; numrat shfaqen pas scroll-it ===== */
+/* Selektor më specifik se `main > section:first-child:has(> img)` te style.css */
+main > section.home-hero:first-child {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - var(--barkea-header-h, 80px));
+    min-height: calc(100svh - var(--barkea-header-h, 80px));
+}
+
+.home-hero > .container {
+    width: 100%;
+    padding-top: 3rem !important;
+    padding-bottom: 5rem !important; /* hapësirë për shigjetën poshtë */
+}
+
+/* Fotoja e përcakton lartësinë; mbushja e tepërt e Bootstrap-it do e shtynte poshtë ekranit */
+.home-hero > .container > .row,
+.home-hero > .container > .row > .col-lg-7 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.hero-scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.5rem;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.1rem;
+    text-decoration: none;
+    animation: hero-scroll-bounce 2s ease-in-out infinite;
+}
+
+.hero-scroll-cue:hover,
+.hero-scroll-cue:focus-visible {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Celular/tablet: teksti poshtë fotos, numrat si karta */
 @media (max-width: 991.98px) {
 
-    /* Fotoja zë gjithë ekranin nën menunë; numrat shfaqen vetëm pas scroll-it */
-    /* Selektor më specifik se `main > section:first-child:has(> img)` te style.css */
     main > section.home-hero:first-child {
-        display: flex;
         align-items: flex-end;
-        min-height: calc(100vh - var(--barkea-header-h));
-        min-height: calc(100svh - var(--barkea-header-h));
     }
 
     .home-hero > .container {
-        width: 100%;
         padding-bottom: 4.5rem !important;
     }
 
@@ -287,30 +327,6 @@
             rgba(30, 40, 32, 0.15) 35%,
             rgba(30, 40, 32, 0.75) 100%
         );
-    }
-
-    .hero-scroll-cue {
-        position: absolute;
-        left: 50%;
-        bottom: 1.25rem;
-        transform: translateX(-50%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 2.75rem;
-        height: 2.75rem;
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        border-radius: 50%;
-        color: #fff;
-        font-size: 1.1rem;
-        text-decoration: none;
-        animation: hero-scroll-bounce 2s ease-in-out infinite;
-    }
-
-    .hero-scroll-cue:hover,
-    .hero-scroll-cue:focus-visible {
-        color: #fff;
-        background: rgba(255, 255, 255, 0.15);
     }
 
     /* Numrat: karta të bardha mbi sfond rëre, në vend të shiritit jeshil */
