@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -117,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Tirane'
 
 USE_I18N = True
 
@@ -132,10 +133,25 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'barkea_project' / 'static',
 ]
+# `python manage.py collectstatic` copies files here; WhiteNoise serves them in production.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        # Pre-compresses files (gzip/brotli) during collectstatic.
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+    },
+}
 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+# Uploaded media should be served by the web server (nginx, host static mapping).
+# Set DJANGO_SERVE_MEDIA=True only on small hosts that cannot do that.
+SERVE_MEDIA = DEBUG or os.environ.get('DJANGO_SERVE_MEDIA', 'False').lower() in {'1', 'true', 'yes'}
 
 EMAIL_BACKEND = os.environ.get(
     'DJANGO_EMAIL_BACKEND',

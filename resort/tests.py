@@ -1,3 +1,5 @@
+from unittest import mock
+
 from django.core import mail
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
@@ -168,6 +170,48 @@ class ContactRequestTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, ['sales@example.com'])
         self.assertIn('visitor@example.com', mail.outbox[0].body)
+        self.assertEqual(mail.outbox[0].reply_to, ['visitor@example.com'])
+
+    def test_invalid_phone_is_rejected_by_server(self):
+        for phone in ('call me maybe', '12345', '+355 69 123 4567 8901 23'):
+            with self.subTest(phone=phone):
+                response = self.client.post('/contact/', {
+                    'fullname': 'Test Visitor',
+                    'email': 'visitor@example.com',
+                    'phone': phone,
+                    'message': 'I would like to schedule a visit.',
+                })
+                self.assertEqual(response.status_code, 200)
+                self.assertTrue(response.context['form'].has_error('phone', 'invalid_phone'))
+        self.assertEqual(ContactRequest.objects.count(), 0)
+
+    def test_honeypot_submission_is_discarded_silently(self):
+        with self.assertLogs('resort.views', level='INFO'):
+            response = self.client.post('/contact/', {
+                'fullname': 'Test Visitor',
+                'email': 'bot@example.com',
+                'phone': '+355 69 123 4567',
+                'message': 'Buy cheap things at my website.',
+                'website': 'https://spam.example.com',
+            }, follow=True)
+
+        self.assertContains(response, 'Thank you! Your message has been received.')
+        self.assertEqual(ContactRequest.objects.count(), 0)
+
+    @override_settings(CONTACT_NOTIFICATION_EMAIL='sales@example.com')
+    def test_email_failure_is_not_shown_to_visitor(self):
+        with mock.patch('resort.views.EmailMessage.send', side_effect=OSError('SMTP down')):
+            with self.assertLogs('resort.views', level='ERROR'):
+                response = self.client.post('/contact/', {
+                    'fullname': 'Test Visitor',
+                    'email': 'visitor@example.com',
+                    'phone': '+355 69 123 4567',
+                    'message': 'I would like to schedule a visit.',
+                }, follow=True)
+
+        self.assertEqual(ContactRequest.objects.count(), 1)
+        self.assertContains(response, 'Thank you! Your message has been received.')
+        self.assertNotContains(response, 'could not send an email notification')
 
 
 class ResortContentTests(TestCase):
@@ -245,6 +289,46 @@ class ResortContentTests(TestCase):
         self.assertContains(detail_response, '/media/gallery/garden-villa.jpg')
         self.assertContains(gallery_response, f'data-gallery-full="{gallery_image.image.url}"')
         self.assertEqual(gallery_response.content.count(b'data-gallery-item'), 15)
+
+    def test_unpublishing_all_villas_does_not_fall_back_to_hardcoded_villas(self):
+        Villa.objects.update(is_published=False)
+
+        response = self.client.get('/villas/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['villas'], [])
+        self.assertEqual(self.client.get('/villas/1/').status_code, 404)
+
+    def test_gallery_hides_images_of_unpublished_villas(self):
+        villa_type = VillaType.objects.create(name='Hidden Type')
+        villa = Villa.objects.create(
+            name='Hidden Villa',
+            villa_type=villa_type,
+            rooms='3+1',
+            area=180,
+            bedrooms=3,
+            bathrooms=3,
+            floors=2,
+            plot=400,
+            description='Not yet public.',
+            is_published=False,
+        )
+        GalleryImage.objects.create(
+            villa=villa,
+            image='gallery/hidden-villa.jpg',
+            alt_text='Hidden Villa exterior',
+            category=GalleryImage.Category.EXTERIOR,
+        )
+        GalleryImage.objects.create(
+            image='gallery/resort-pool.jpg',
+            alt_text='Resort pool',
+            category=GalleryImage.Category.AMENITIES,
+        )
+
+        response = self.client.get('/gallery/')
+
+        self.assertNotContains(response, 'hidden-villa.jpg')
+        self.assertContains(response, 'resort-pool.jpg')
 
     def test_content_and_contact_models_are_available_in_admin(self):
         user_model = get_user_model()

@@ -62,6 +62,10 @@
                                 {{ form.message.errors }}
                             </div>
                         </div>
+                        <div class="visually-hidden" aria-hidden="true">
+                            <label for="{{ form.website.id_for_label }}">{{ form.website.label }}</label>
+                            {{ form.website }}
+                        </div>
                         <button type="submit" class="btn btn-primary btn-lg w-100 fw-semibold">Send Message <i class="bi bi-arrow-right"></i></button>
                     </form>
                 </div>

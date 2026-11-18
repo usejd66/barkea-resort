@@ -23,6 +23,19 @@ Pa `DJANGO_DEBUG=True`, aplikacioni kërkon `DJANGO_SECRET_KEY`. Në prodhim ven
 
 Mesazhet e kontaktit ruhen në databazë dhe mund të shihen nga admin-i i Django-s. Njoftimi me email është opsional: vendos `CONTACT_NOTIFICATION_EMAIL`, `DJANGO_EMAIL_HOST`, `DJANGO_EMAIL_USER`, `DJANGO_EMAIL_PASSWORD` dhe `DJANGO_DEFAULT_FROM_EMAIL` në mjedisin e hostit; asnjë kredencial nuk duhet ruajtur në Git. Databaza lokale `db.sqlite3` nuk duhet përdorur për të dhëna prodhimi.
 
+## Prodhimi: static dhe media
+
+Para çdo deploy ekzekuto:
+
+```sh
+python manage.py migrate
+python manage.py collectstatic --noinput
+```
+
+`collectstatic` mbledh CSS, JS dhe fotot e projektit te `staticfiles/`, dhe WhiteNoise i shërben ato të kompresuara pa konfigurim shtesë në server.
+
+Fotot që ngarkohen nga admin-i ruhen te `media/` dhe duhet t'i shërbejë serveri (p.sh. nginx ose "static files mapping" i hostit: `/media/` → dosja `media/`). Nëse hosti nuk e lejon këtë, vendos `DJANGO_SERVE_MEDIA=True`, që Django t'i shërbejë vetë. Kjo zgjidhje është më e ngadaltë, por mjafton për një faqe të vogël.
+
 ## Testet
 
 ```sh

@@ -1,9 +1,12 @@
+import re
 import unicodedata
 
 from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import ContactRequest
+
+PHONE_PATTERN = re.compile(r'\+?[0-9\s().-]+')
 
 
 class ContactRequestForm(forms.ModelForm):
@@ -19,6 +22,13 @@ class ContactRequestForm(forms.ModelForm):
             'placeholder': 'Your message...',
             'aria-describedby': 'message-feedback message-server-errors',
         }),
+    )
+
+    # Honeypot: fushë e fshehur për njerëzit; bot-et e mbushin dhe kërkesa hidhet poshtë.
+    website = forms.CharField(
+        required=False,
+        label='Leave this field empty',
+        widget=forms.TextInput(attrs={'autocomplete': 'off', 'tabindex': '-1'}),
     )
 
     class Meta:
@@ -63,3 +73,17 @@ class ContactRequestForm(forms.ModelForm):
                 code='invalid_name',
             )
         return fullname
+
+    def clean_phone(self):
+        # Same rule as form-validation.js: digits with optional +, spaces, (), . and -.
+        phone = self.cleaned_data['phone'].strip()
+        digits = sum(character.isdigit() for character in phone)
+        if not PHONE_PATTERN.fullmatch(phone) or not 7 <= digits <= 15:
+            raise ValidationError(
+                'Enter a valid phone number (7-15 digits).',
+                code='invalid_phone',
+            )
+        return phone
+
+    def is_spam(self):
+        return bool(self.cleaned_data.get('website'))
