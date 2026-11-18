@@ -54,6 +54,13 @@
                                 {{ form.phone.errors }}
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label for="{{ form.villa.id_for_label }}" class="form-label fw-semibold small">{{ form.villa.label }} <span class="text-secondary fw-normal">(optional)</span></label>
+                            {{ form.villa }}
+                            <div id="villa-server-errors" class="text-danger small mt-1" role="alert"{% if not form.villa.errors %} hidden{% endif %}>
+                                {{ form.villa.errors }}
+                            </div>
+                        </div>
                         <div class="mb-4">
                             <label for="id_message" class="form-label fw-semibold small">Message *</label>
                             {{ form.message }}
@@ -82,21 +89,21 @@
                             <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-telephone text-primary"></i></div>
                             <div>
                                 <span class="text-muted small">Phone</span>
-                                <p class="fw-semibold mb-0">+355 69 123 4567</p>
+                                <a href="tel:{{ site_contact.phone_href }}" class="d-block fw-semibold text-reset text-decoration-none">{{ site_contact.phone }}</a>
                             </div>
                         </div>
                         <div class="d-flex align-items-start gap-3 mb-3">
                             <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-envelope text-primary"></i></div>
                             <div>
                                 <span class="text-muted small">Email</span>
-                                <p class="fw-semibold mb-0">info@barkearesort.al</p>
+                                <a href="mailto:{{ site_contact.email }}" class="d-block fw-semibold text-reset text-decoration-none">{{ site_contact.email }}</a>
                             </div>
                         </div>
                         <div class="d-flex align-items-start gap-3">
                             <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 p-3"><i class="bi bi-geo-alt text-primary"></i></div>
                             <div>
                                 <span class="text-muted small">Address</span>
-                                <p class="fw-semibold mb-0">Lundër / Farkë<br>Tirana, Albania</p>
+                                <p class="fw-semibold mb-0">{% for line in site_contact.address_lines %}{{ line }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</p>
                             </div>
                         </div>
                     </div>

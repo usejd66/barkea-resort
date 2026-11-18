@@ -4,7 +4,7 @@ import unicodedata
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import ContactRequest
+from .models import ContactRequest, Villa
 
 PHONE_PATTERN = re.compile(r'\+?[0-9\s().-]+')
 
@@ -24,6 +24,21 @@ class ContactRequestForm(forms.ModelForm):
         }),
     )
 
+    # Vila që e intereson klientin. Vlera është slug-u, që faqja e vilës ta zgjedhë vetë
+    # përmes /contact/?villa=<slug>. Lejohen vetëm vilat e publikuara.
+    villa = forms.ModelChoiceField(
+        queryset=Villa.objects.none(),
+        required=False,
+        to_field_name='slug',
+        empty_label='Not sure yet / any villa',
+        label='Villa of interest',
+        error_messages={'invalid_choice': 'Please choose one of the listed villas.'},
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'aria-describedby': 'villa-server-errors',
+        }),
+    )
+
     # Honeypot: fushë e fshehur për njerëzit; bot-et e mbushin dhe kërkesa hidhet poshtë.
     website = forms.CharField(
         required=False,
@@ -33,7 +48,7 @@ class ContactRequestForm(forms.ModelForm):
 
     class Meta:
         model = ContactRequest
-        fields = ('fullname', 'email', 'phone', 'message')
+        fields = ('fullname', 'email', 'phone', 'villa', 'message')
         widgets = {
             'fullname': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -51,6 +66,13 @@ class ContactRequestForm(forms.ModelForm):
                 'aria-describedby': 'phone-feedback phone-server-errors',
             }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['villa'].queryset = Villa.objects.filter(
+            is_published=True,
+            villa_type__is_active=True,
+        )
 
     def clean_fullname(self):
         fullname = self.cleaned_data['fullname']

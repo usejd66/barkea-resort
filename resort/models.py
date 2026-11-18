@@ -76,8 +76,8 @@ class Villa(models.Model):
 class GalleryImage(models.Model):
     class Category(models.TextChoices):
         EXTERIOR = 'exterior', 'Exterior'
-        INTERIOR = 'interior', 'Interior'
-        AMENITIES = 'amenities', 'Amenities'
+        INTERIOR = 'interior', 'Interiors'
+        AMENITIES = 'amenities', 'Outdoor spaces'
 
     villa = models.ForeignKey(
         Villa,
@@ -111,6 +111,15 @@ class ContactRequest(models.Model):
     fullname = models.CharField(max_length=120)
     email = models.EmailField()
     phone = models.CharField(max_length=30)
+    # Vila që e intereson klientin (opsionale); kërkesa ruhet edhe nëse vila fshihet më vonë.
+    villa = models.ForeignKey(
+        Villa,
+        on_delete=models.SET_NULL,
+        related_name='contact_requests',
+        blank=True,
+        null=True,
+        verbose_name='villa of interest',
+    )
     message = models.TextField()
     status = models.CharField(
         max_length=12,

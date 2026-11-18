@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMessage
-from django.db.models import Q
+from django.db.models import Max, Min, Q
 from django.http import Http404
 from django.shortcuts import redirect, render
 
@@ -77,9 +77,63 @@ def _villa_data(villa):
     return data
 
 
+def _rooms_range(villas):
+    """P.sh. '3+1 to 6+1', nga vila me më pak dhe me më shumë dhoma gjumi."""
+    by_bedrooms = villas.order_by('bedrooms', 'display_order')
+    smallest, largest = by_bedrooms.first(), by_bedrooms.last()
+    if smallest is None:
+        return ''
+    if smallest.rooms == largest.rooms:
+        return smallest.rooms
+    return f'{smallest.rooms} to {largest.rooms}'
+
+
+def _key_facts(villas, rooms_range):
+    """Numrat e faqes kryesore; dhoma dhe sipërfaqe llogariten nga vilat e publikuara."""
+    facts = [{'icon': 'bi-geo-alt', 'value': '8 km', 'label': 'from Tirana'}]
+    if rooms_range:
+        facts.append({'icon': 'bi-house-door', 'value': rooms_range, 'label': 'villa typologies'})
+    area = villas.aggregate(smallest=Min('area'), largest=Max('area'))
+    if area['smallest'] is not None:
+        value = (
+            f"{area['smallest']} m²" if area['smallest'] == area['largest']
+            else f"{area['smallest']} – {area['largest']} m²"
+        )
+        facts.append({'icon': 'bi-arrows-angle-expand', 'value': value, 'label': 'living area'})
+    facts.append({'icon': 'bi-shield-check', 'value': 'Gated', 'label': 'private community'})
+    return facts
+
+
+def _public_gallery_images():
+    # Fotot e një vile shfaqen vetëm kur vila (dhe tipi i saj) është publike.
+    return GalleryImage.objects.filter(
+        Q(villa__isnull=True)
+        | Q(villa__is_published=True, villa__villa_type__is_active=True),
+        is_published=True,
+    ).select_related('villa')
+
+
+def _gallery_item(image):
+    return {
+        'image_url': _asset_url(image.image, image.static_image),
+        'image_static': _static_source(image.image, image.static_image),
+        'alt_text': image.alt_text,
+        'caption': image.caption or image.alt_text,
+        'category': image.category,
+    }
+
+
 def index_view(request):
-    villas = [_villa_data(villa) for villa in _published_villas()[:3]]
-    return render(request, 'home.html', {'villas': villas})
+    published = Villa.objects.filter(is_published=True, villa_type__is_active=True)
+    rooms_range = _rooms_range(published)
+    # Fotot e përgjithshme të resortit (jo të një vile të caktuar) për "Selected Gallery".
+    featured = _public_gallery_images().filter(villa__isnull=True)[:4]
+    return render(request, 'home.html', {
+        'villas': [_villa_data(villa) for villa in _published_villas()[:3]],
+        'rooms_range': rooms_range,
+        'key_facts': _key_facts(published, rooms_range),
+        'featured_images': [_gallery_item(image) for image in featured],
+    })
 
 
 def about_view(request):
@@ -114,23 +168,10 @@ def villa_legacy_redirect_view(request, pk):
 
 
 def gallery_view(request):
-    # Fotot e një vile shfaqen vetëm kur vila (dhe tipi i saj) është publike.
-    images = GalleryImage.objects.filter(
-        Q(villa__isnull=True)
-        | Q(villa__is_published=True, villa__villa_type__is_active=True),
-        is_published=True,
-    ).select_related('villa')
-    gallery_images = [
-        {
-            'image_url': _asset_url(image.image, image.static_image),
-            'image_static': _static_source(image.image, image.static_image),
-            'alt_text': image.alt_text,
-            'caption': image.caption or image.alt_text,
-            'category': image.category,
-        }
-        for image in images
-    ]
-    return render(request, 'gallery.html', {'gallery_images': gallery_images})
+    return render(request, 'gallery.html', {
+        'gallery_images': [_gallery_item(image) for image in _public_gallery_images()],
+        'gallery_categories': GalleryImage.Category.choices,
+    })
 
 
 def location_view(request):
@@ -144,7 +185,8 @@ def _send_contact_notification(contact_message):
         body=(
             f'Name: {contact_message.fullname}\n'
             f'Email: {contact_message.email}\n'
-            f'Phone: {contact_message.phone}\n\n'
+            f'Phone: {contact_message.phone}\n'
+            f'Villa of interest: {contact_message.villa or "Not specified"}\n\n'
             f'{contact_message.message}'
         ),
         from_email=settings.DEFAULT_FROM_EMAIL,
@@ -175,4 +217,8 @@ def contact_view(request):
             return redirect('contact')
     else:
         form = ContactRequestForm()
+        # Butoni "Request Information" te faqja e vilës dërgon ?villa=<slug>.
+        requested = request.GET.get('villa', '')
+        if form.fields['villa'].queryset.filter(slug=requested).exists():
+            form.initial['villa'] = requested
     return render(request, 'contact.html', {'form': form})

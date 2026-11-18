@@ -4,7 +4,7 @@ from django.core import mail
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
 from django.template import Context, Template
-from django.test import TestCase, override_settings
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
 from .models import ContactRequest, Feature, GalleryImage, Villa, VillaType
@@ -425,3 +425,158 @@ class ResponsiveImageTests(TestCase):
         for path in ('', 'image/not-built.jpg'):
             with self.subTest(path=path):
                 self.assertEqual(template.render(Context({'path': path})), '<img>')
+
+
+def _make_villa(name, area=200, bedrooms=3, rooms='3+1', published=True, villa_type=None):
+    villa_type = villa_type or VillaType.objects.create(name=f'{name} Type')
+    return Villa.objects.create(
+        name=name,
+        villa_type=villa_type,
+        rooms=rooms,
+        area=area,
+        bedrooms=bedrooms,
+        bathrooms=2,
+        floors=2,
+        plot=400,
+        description=f'{name} description.',
+        is_published=published,
+    )
+
+
+class DynamicTemplatesTests(TestCase):
+    """Detyra 14: përmbajtja vjen nga databaza dhe faqet ndajnë komponentë të përbashkët."""
+
+    def test_pages_share_base_layout_and_components(self):
+        for url in ('/', '/villas/', '/gallery/', '/contact/'):
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertTemplateUsed(response, 'base.html')
+                self.assertTemplateUsed(response, 'partials/header.html')
+                self.assertTemplateUsed(response, 'partials/footer.html')
+
+        self.assertTemplateUsed(self.client.get('/'), 'partials/villa_card.html')
+        self.assertTemplateUsed(self.client.get('/'), 'partials/cta_banner.html')
+        self.assertTemplateUsed(self.client.get('/gallery/'), 'partials/gallery_card.html')
+        villa = Villa.objects.get(slug='vile-ne-shitje-tirane')
+        self.assertTemplateUsed(self.client.get(f'/villas/{villa.slug}/'), 'partials/cta_banner.html')
+
+    def test_navigation_comes_from_one_list_and_marks_current_page(self):
+        response = self.client.get('/gallery/')
+
+        self.assertContains(response, '<a class="nav-link active" href="/gallery/" aria-current="page">Gallery</a>', html=True)
+        self.assertContains(response, '<a class="nav-link" href="/villas/">Villas</a>', html=True)
+        # Footer uses the same list
+        self.assertContains(response, 'href="/location/" class="text-white-50 text-decoration-none">Location</a>')
+
+    def test_home_key_facts_are_calculated_from_published_villas(self):
+        _make_villa('Grand Villa', area=500, bedrooms=8, rooms='8+1')
+        _make_villa('Hidden Villa', area=900, bedrooms=9, rooms='9+1', published=False)
+
+        response = self.client.get('/')
+
+        self.assertContains(response, '180 – 500 m²')
+        self.assertContains(response, '3+1 to 8+1')
+        self.assertNotContains(response, '900 m²')
+        self.assertNotContains(response, '9+1')
+
+    def test_home_selected_gallery_comes_from_database(self):
+        GalleryImage.objects.filter(villa__isnull=True).update(is_published=False)
+        GalleryImage.objects.create(
+            image='gallery/new-pool.jpg',
+            alt_text='Brand new pool area',
+            category=GalleryImage.Category.AMENITIES,
+        )
+
+        response = self.client.get('/')
+
+        self.assertContains(response, 'alt="Brand new pool area"')
+        self.assertNotContains(response, 'render-1.jpg')
+
+    def test_gallery_filters_follow_model_categories(self):
+        response = self.client.get('/gallery/')
+
+        for value, label in GalleryImage.Category.choices:
+            with self.subTest(category=value):
+                self.assertContains(response, f'data-filter="{value}" aria-pressed="false">{label}</button>')
+
+    def test_gallery_shows_message_when_database_has_no_photos(self):
+        GalleryImage.objects.all().delete()
+
+        response = self.client.get('/gallery/')
+
+        self.assertContains(response, 'Photos will be added soon.')
+        self.assertNotContains(response, 'data-gallery-item')
+
+    def test_new_villa_added_in_database_appears_without_template_changes(self):
+        villa = _make_villa('Lake Villa', area=260, bedrooms=4, rooms='4+1')
+
+        listing = self.client.get('/villas/')
+        detail = self.client.get(f'/villas/{villa.slug}/')
+
+        self.assertContains(listing, 'Lake Villa')
+        self.assertContains(detail, 'Lake Villa description.')
+
+
+class LeadFormVillaTests(TestCase):
+    """Detyra 15: formulari ruan edhe vilën që e intereson klientin."""
+
+    valid_data = {
+        'fullname': 'Test Visitor',
+        'email': 'visitor@example.com',
+        'phone': '+355 69 123 4567',
+        'message': 'I would like to schedule a visit.',
+    }
+
+    def test_selected_villa_is_saved_with_the_request(self):
+        response = self.client.post('/contact/', {**self.valid_data, 'villa': 'okazion-tirane'})
+
+        self.assertRedirects(response, '/contact/')
+        self.assertEqual(ContactRequest.objects.get().villa.slug, 'okazion-tirane')
+
+    def test_villa_is_optional(self):
+        self.client.post('/contact/', self.valid_data)
+
+        self.assertIsNone(ContactRequest.objects.get().villa)
+
+    def test_villa_page_button_preselects_that_villa(self):
+        detail = self.client.get('/villas/okazion-tirane/')
+        self.assertContains(detail, 'href="/contact/?villa=okazion-tirane"')
+
+        form_page = self.client.get('/contact/?villa=okazion-tirane')
+        self.assertContains(form_page, '<option value="okazion-tirane" selected>', html=False)
+
+    def test_unknown_or_unpublished_villa_is_rejected(self):
+        hidden = _make_villa('Secret Villa', published=False)
+        for slug in ('no-such-villa', hidden.slug):
+            with self.subTest(slug=slug):
+                response = self.client.post('/contact/', {**self.valid_data, 'villa': slug})
+                self.assertEqual(response.status_code, 200)
+                self.assertTrue(response.context['form'].has_error('villa', 'invalid_choice'))
+        self.assertEqual(ContactRequest.objects.count(), 0)
+        self.assertNotContains(self.client.get('/contact/'), 'Secret Villa')
+
+    @override_settings(
+        CONTACT_NOTIFICATION_EMAIL='sales@example.com',
+        EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
+    )
+    def test_notification_email_names_the_villa(self):
+        self.client.post('/contact/', {**self.valid_data, 'villa': 'okazion-tirane'})
+
+        self.assertIn('Villa of interest: Okazion - Tirane', mail.outbox[0].body)
+
+    def test_form_is_protected_by_csrf(self):
+        csrf_client = Client(enforce_csrf_checks=True)
+
+        self.assertContains(csrf_client.get('/contact/'), 'name="csrfmiddlewaretoken"')
+        response = csrf_client.post('/contact/', self.valid_data)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(ContactRequest.objects.count(), 0)
+
+    def test_admin_lists_requests_with_their_villa(self):
+        get_user_model().objects.create_superuser('admin', 'admin@example.com', 'test-pass')
+        self.client.login(username='admin', password='test-pass')
+        self.client.post('/contact/', {**self.valid_data, 'villa': 'okazion-tirane'})
+
+        response = self.client.get(reverse('admin:resort_contactrequest_changelist'))
+
+        self.assertContains(response, 'Okazion - Tirane')

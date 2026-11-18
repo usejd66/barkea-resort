@@ -1,0 +1,19 @@
+{% load responsive %}
+{% comment %}
+Karta e një fotoje në galeri. Pret `image` me: image_url, image_static, alt_text, caption, category.
+Klikimi hap foton origjinale (cilësi e plotë) në lightbox.
+{% endcomment %}
+<div class="col-6 col-lg-4" data-gallery-item data-category="{{ image.category }}">
+    <article class="gallery-card h-100">
+        <button class="gallery-card-button" type="button" data-gallery-open
+                data-gallery-full="{{ image.image_url }}"
+                data-gallery-alt="{{ image.alt_text }}"
+                data-gallery-caption="{{ image.caption }}"
+                aria-label="View photo: {{ image.caption }}">
+            <span class="ratio ratio-4x3 gallery-image-frame">
+                <img src="{{ image.image_url }}"{% responsive image.image_static '(min-width: 992px) 33vw, 50vw' %} alt="{{ image.alt_text }}" width="1200" height="900" loading="lazy" decoding="async">
+            </span>
+            <span class="gallery-card-caption">{{ image.caption }}</span>
+        </button>
+    </article>
+</div>

@@ -1,0 +1,18 @@
+<footer class="bg-dark text-white py-4">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <a href="{% url 'home' %}" class="fw-bold fs-4 text-white text-decoration-none">Barkea</a>
+            <ul class="list-inline mb-0 small">
+                {% for item in nav_items %}
+                <li class="list-inline-item{% if not forloop.first %} ms-2{% endif %}"><a href="{{ item.url }}" class="text-white-50 text-decoration-none">{{ item.label }}</a></li>
+                {% endfor %}
+                <li class="list-inline-item ms-2"><a href="{% url 'contact' %}" class="text-white-50 text-decoration-none">Contact</a></li>
+            </ul>
+            <div class="d-flex gap-3">
+                {% for link in social_links %}
+                <a href="{{ link.url }}" class="text-white-50" aria-label="{{ link.label }}"><i class="bi {{ link.icon }} fs-5" aria-hidden="true"></i></a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</footer>

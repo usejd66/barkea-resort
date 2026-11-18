@@ -1,0 +1,14 @@
+{% load responsive %}
+{% comment %}Karta e një vile (faqja kryesore). Pret `villa` nga views._villa_data.{% endcomment %}
+<a href="{% url 'villa_detail' villa.slug %}" class="text-decoration-none">
+    <article class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="ratio ratio-4x3">
+            <img src="{{ villa.image_url }}"{% responsive villa.image_static '(min-width: 768px) 25vw, 100vw' %} loading="lazy" decoding="async" alt="Villa {{ villa.name }}" class="object-fit-cover">
+        </div>
+        <div class="card-body p-3">
+            <h3 class="h5 fw-bold text-dark mb-1">{{ villa.name }}</h3>
+            <p class="text-muted small mb-1">{{ villa.rooms }} | {{ villa.area }} m²</p>
+            <p class="text-secondary small mb-0">{{ villa.bedrooms }} bedroom{{ villa.bedrooms|pluralize }} &middot; {{ villa.floors }} floor{{ villa.floors|pluralize }} &middot; {{ villa.plot }} m² plot</p>
+        </div>
+    </article>
+</a>

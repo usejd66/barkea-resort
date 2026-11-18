@@ -1,0 +1,31 @@
+<header class="sticky-top bg-white border-bottom shadow-sm">
+    <nav class="navbar navbar-expand-lg container py-3" aria-label="Main Navigation">
+        <a class="navbar-brand fw-bold fs-3" href="{% url 'home' %}">Barkea</a>
+
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-label="Open navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Në celular hapet si panel anësor; në desktop shfaqet në rresht si zakonisht -->
+        <div class="offcanvas offcanvas-end site-offcanvas" tabindex="-1" id="mainNavbar" aria-labelledby="mainNavbarLabel">
+            <div class="offcanvas-header">
+                <a class="offcanvas-title navbar-brand fw-bold fs-3 mb-0" id="mainNavbarLabel" href="{% url 'home' %}">Barkea</a>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close navigation"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+                    {% for item in nav_items %}
+                    <li class="nav-item"><a class="nav-link{% if item.active %} active{% endif %}" href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+                    {% endfor %}
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-primary px-4 rounded-pill fw-semibold" href="{% url 'contact' %}"{% if contact_page_active %} aria-current="page"{% endif %}>Contact</a>
+                    </li>
+                </ul>
+                <div class="site-offcanvas-contact d-lg-none">
+                    <a href="tel:{{ site_contact.phone_href }}"><i class="bi bi-telephone" aria-hidden="true"></i> {{ site_contact.phone }}</a>
+                    <a href="mailto:{{ site_contact.email }}"><i class="bi bi-envelope" aria-hidden="true"></i> {{ site_contact.email }}</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

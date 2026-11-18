@@ -49,9 +49,10 @@ class GalleryImageAdmin(admin.ModelAdmin):
 
 @admin.register(ContactRequest)
 class ContactRequestAdmin(admin.ModelAdmin):
-    list_display = ('fullname', 'email', 'phone', 'status', 'created_at')
-    list_filter = ('status', 'created_at')
-    search_fields = ('fullname', 'email', 'phone', 'message')
+    list_display = ('fullname', 'email', 'phone', 'villa', 'status', 'created_at')
+    list_filter = ('status', 'villa', 'created_at')
+    search_fields = ('fullname', 'email', 'phone', 'message', 'villa__name')
+    list_select_related = ('villa',)
     list_editable = ('status',)
     readonly_fields = ('created_at',)
     date_hierarchy = 'created_at'

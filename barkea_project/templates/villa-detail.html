@@ -22,7 +22,7 @@
                     <p class="fs-4 fw-semibold text-secondary mb-3">{{ villa.rooms }} | {{ villa.area }} m²</p>
                     <p class="text-muted fs-5 mb-3">{{ villa.description }}</p>
                     <p class="text-muted mb-4">{{ villa.area }} m² of living space on {{ villa.floors }} floors, with {{ villa.bedrooms }} bedrooms and {{ villa.bathrooms }} bathrooms, set on a private plot of {{ villa.plot }} m². Includes a large veranda and parking space.</p>
-                    <a href="{% url 'contact' %}" class="btn btn-primary btn-lg rounded-3 px-4 fw-semibold">Request Information <i class="bi bi-arrow-right"></i></a>
+                    <a href="{% url 'contact' %}?villa={{ villa.slug|urlencode }}" class="btn btn-primary btn-lg rounded-3 px-4 fw-semibold">Request Information <i class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
         </section>
@@ -190,17 +190,10 @@
 
         <!-- CTA -->
         <section class="mt-5 pt-3">
-            <div class="p-5 rounded-4 text-white bg-dark">
-                <div class="row align-items-center">
-                    <div class="col-lg-8 mb-3 mb-lg-0">
-                        <h2 class="fw-bold mb-2">Interested in this villa?</h2>
-                        <p class="mb-0 opacity-75 fs-5">Request more information or schedule a visit to see this villa in person.</p>
-                    </div>
-                    <div class="col-lg-4 text-lg-end">
-                        <a href="{% url 'contact' %}" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold">Request Information <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
+            {% url 'contact' as contact_url %}
+            {% with request_url=contact_url|add:"?villa="|add:villa.slug %}
+            {% include 'partials/cta_banner.html' with title="Interested in this villa?" text="Request more information or schedule a visit to see this villa in person." button_label="Request Information" button_url=request_url %}
+            {% endwith %}
         </section>
 
     </div>

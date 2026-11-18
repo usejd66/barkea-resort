@@ -1,0 +1,19 @@
+{% comment %}
+Kutia jeshile "call to action". Parametra:
+  title, text, button_label, button_url  (të detyrueshëm)
+  secondary_label, secondary_url          (opsionalë: butoni i dytë me kontur)
+{% endcomment %}
+<div class="p-5 rounded-4 bg-dark text-white">
+    <div class="row align-items-center">
+        <div class="col-lg-7 mb-4 mb-lg-0">
+            <h2 class="fw-bold mb-2">{{ title }}</h2>
+            <p class="mb-0 opacity-75 fs-5">{{ text }}</p>
+        </div>
+        <div class="col-lg-5 d-flex flex-column flex-sm-row gap-3 justify-content-lg-end">
+            {% if secondary_label %}
+            <a href="{{ secondary_url }}" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-semibold">{{ secondary_label }}</a>
+            {% endif %}
+            <a href="{{ button_url }}" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold">{{ button_label }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        </div>
+    </div>
+</div>

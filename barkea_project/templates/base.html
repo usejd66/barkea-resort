@@ -13,103 +13,20 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}?v=8">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=8">
     {% block extra_css %}{% endblock %}
-    
-
-
 </head>
 <body>
 
     <a class="visually-hidden-focusable" href="#main-content">Skip to main content</a>
 
-    {% with url_name=request.resolver_match.url_name %}
-    <header class="sticky-top bg-white border-bottom shadow-sm">
-        <nav class="navbar navbar-expand-lg container py-3" aria-label="Main Navigation">
-            <a class="navbar-brand fw-bold fs-3" href="{% url 'home' %}">Barkea</a>
+    {% include 'partials/header.html' %}
 
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-label="Open navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Në celular hapet si panel anësor; në desktop shfaqet në rresht si zakonisht -->
-            <div class="offcanvas offcanvas-end site-offcanvas" tabindex="-1" id="mainNavbar" aria-labelledby="mainNavbarLabel">
-                <div class="offcanvas-header">
-                    <a class="offcanvas-title navbar-brand fw-bold fs-3 mb-0" id="mainNavbarLabel" href="{% url 'home' %}">Barkea</a>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close navigation"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
-                        <li class="nav-item"><a class="nav-link {% if url_name == 'home' %}active{% endif %}" href="{% url 'home' %}"{% if url_name == 'home' %} aria-current="page"{% endif %}>Home</a></li>
-                        <li class="nav-item"><a class="nav-link {% if url_name == 'about' %}active{% endif %}" href="{% url 'about' %}"{% if url_name == 'about' %} aria-current="page"{% endif %}>About Us</a></li>
-                        <li class="nav-item"><a class="nav-link {% if url_name == 'villas' or url_name == 'villa_detail' %}active{% endif %}" href="{% url 'villas' %}"{% if url_name == 'villas' or url_name == 'villa_detail' %} aria-current="page"{% endif %}>Villas</a></li>
-                        <li class="nav-item"><a class="nav-link {% if url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}"{% if url_name == 'gallery' %} aria-current="page"{% endif %}>Gallery</a></li>
-                        <li class="nav-item"><a class="nav-link {% if url_name == 'location' %}active{% endif %}" href="{% url 'location' %}"{% if url_name == 'location' %} aria-current="page"{% endif %}>Location</a></li>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-primary px-4 rounded-pill fw-semibold" href="{% url 'contact' %}">Contact</a>
-                        </li>
-                    </ul>
-                    <div class="site-offcanvas-contact d-lg-none">
-                        <a href="tel:+355691234567"><i class="bi bi-telephone" aria-hidden="true"></i> +355 69 123 4567</a>
-                        <a href="mailto:info@barkearesort.al"><i class="bi bi-envelope" aria-hidden="true"></i> info@barkearesort.al</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
-    {% endwith %}
-
-    {% if messages %}
-    <div class="site-toast-container" aria-label="Notifications">
-        {% for message in messages %}
-        <div class="toast site-toast{% if 'success' in message.tags %} site-toast-success{% elif 'warning' in message.tags %} site-toast-warning{% elif 'error' in message.tags %} site-toast-error{% else %} site-toast-info{% endif %}"
-             role="{% if 'error' in message.tags %}alert{% else %}status{% endif %}"
-             aria-live="{% if 'error' in message.tags %}assertive{% else %}polite{% endif %}"
-             aria-atomic="true"
-             data-bs-autohide="{% if 'success' in message.tags %}true{% else %}false{% endif %}"
-             data-bs-delay="5000">
-            <div class="d-flex align-items-center">
-                <div class="toast-body d-flex align-items-center gap-2">
-                    {% if 'success' in message.tags %}
-                    <i class="bi bi-check-circle-fill site-toast-icon" aria-hidden="true"></i>
-                    {% elif 'warning' in message.tags %}
-                    <i class="bi bi-exclamation-triangle-fill site-toast-icon" aria-hidden="true"></i>
-                    {% elif 'error' in message.tags %}
-                    <i class="bi bi-exclamation-circle-fill site-toast-icon" aria-hidden="true"></i>
-                    {% else %}
-                    <i class="bi bi-info-circle-fill site-toast-icon" aria-hidden="true"></i>
-                    {% endif %}
-                    <span>{{ message }}</span>
-                </div>
-                <button type="button" class="btn-close me-2" data-bs-dismiss="toast" aria-label="Dismiss notification"></button>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
+    {% include 'partials/messages.html' %}
 
     <main id="main-content">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                <a href="{% url 'home' %}" class="fw-bold fs-4 text-white text-decoration-none">Barkea</a>
-                <ul class="list-inline mb-0 small">
-                    <li class="list-inline-item"><a href="{% url 'home' %}" class="text-white-50 text-decoration-none">Home</a></li>
-                    <li class="list-inline-item ms-2"><a href="{% url 'about' %}" class="text-white-50 text-decoration-none">About Us</a></li>
-                    <li class="list-inline-item ms-2"><a href="{% url 'villas' %}" class="text-white-50 text-decoration-none">Villas</a></li>
-                    <li class="list-inline-item ms-2"><a href="{% url 'gallery' %}" class="text-white-50 text-decoration-none">Gallery</a></li>
-                    <li class="list-inline-item ms-2"><a href="{% url 'location' %}" class="text-white-50 text-decoration-none">Location</a></li>
-                    <li class="list-inline-item ms-2"><a href="{% url 'contact' %}" class="text-white-50 text-decoration-none">Contact</a></li>
-                </ul>
-                <div class="d-flex gap-3">
-                    <a href="#" class="text-white-50" aria-label="Facebook"><i class="bi bi-facebook fs-5"></i></a>
-                    <a href="#" class="text-white-50" aria-label="Instagram"><i class="bi bi-instagram fs-5"></i></a>
-                    <a href="#" class="text-white-50" aria-label="LinkedIn"><i class="bi bi-linkedin fs-5"></i></a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    {% include 'partials/footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="{% static 'js/main.js' %}?v=8"></script>
